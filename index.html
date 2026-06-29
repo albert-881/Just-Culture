@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Just Culture Algorithm</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #1B2A4A;
+      --steel:   #2E4A7A;
+      --accent:  #4A90C4;
+      --soft-bg: #F0F4F9;
+      --white:   #FFFFFF;
+      --border:  #D0DCE8;
+      --text:    #1B2A4A;
+      --muted:   #6B7E99;
+
+      --outcome-system:  #2E6B9E;
+      --outcome-human:   #2E7D5B;
+      --outcome-atrisk:  #B8860B;
+      --outcome-reckless:#9B2335;
+      --outcome-stop:    #4A6741;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--soft-bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 80px;
+    }
+
+    /* ── Header ── */
+    .form-header {
+      text-align: center;
+      max-width: 620px;
+      margin-bottom: 40px;
+    }
+
+    .form-header .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .form-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.4rem;
+      color: var(--navy);
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .form-header p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 40px 44px;
+      width: 100%;
+      max-width: 620px;
+      box-shadow: 0 4px 24px rgba(27,42,74,0.08);
+    }
+
+    /* ── Progress ── */
+    .progress-wrap {
+      margin-bottom: 32px;
+    }
+
+    .progress-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-bar-bg {
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Question ── */
+    .question-block { display: none; }
+    .question-block.active { display: block; }
+
+    .question-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.55;
+      margin-bottom: 28px;
+    }
+
+    /* ── Answer buttons ── */
+    .answer-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .answer-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .answer-btn:hover {
+      border-color: var(--accent);
+      background: #EBF3FA;
+      color: var(--accent);
+    }
+
+    .answer-btn.selected {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    /* ── Navigation ── */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-back {
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
+    }
+
+    .btn-back:hover { color: var(--navy); }
+    .btn-back:disabled { opacity: 0.3; cursor: default; }
+
+    /* ── Outcome screen ── */
+    .outcome-screen { display: none; }
+    .outcome-screen.active { display: block; }
+
+    .outcome-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .outcome-badges {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .outcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-left: 4px solid;
+    }
+
+    .outcome-badge.system  { background:#EBF3FA; color:var(--outcome-system);  border-color:var(--outcome-system); }
+    .outcome-badge.human   { background:#E8F5EF; color:var(--outcome-human);   border-color:var(--outcome-human); }
+    .outcome-badge.atrisk  { background:#FDF8E7; color:var(--outcome-atrisk);  border-color:var(--outcome-atrisk); }
+    .outcome-badge.reckless{ background:#FBEAEC; color:var(--outcome-reckless);border-color:var(--outcome-reckless); }
+    .outcome-badge.stop    { background:#EAF2E9; color:var(--outcome-stop);    border-color:var(--outcome-stop); }
+
+    .outcome-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      padding: 14px 16px;
+      background: var(--soft-bg);
+      border-radius: 8px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background 0.18s;
+    }
+
+    .btn-submit:hover { background: var(--steel); }
+
+    /* ── Stop screen ── */
+    .stop-screen { display: none; }
+    .stop-screen.active { display: block; }
+
+    .stop-icon {
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+    }
+
+    .stop-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .stop-message {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    /* Hidden fields for TeamDesk */
+    .hidden-fields { display: none; }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 22px; }
+      .form-header h1 { font-size: 1.9rem; }
+      .answer-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="form-header">
+    <div class="eyebrow">Incident Review Tool</div>
+    <h1>Just Culture Algorithm</h1>
+    <p>Answer each question honestly. You will be guided through based on your responses. Only one question is shown at a time.</p>
+  </div>
+
+  <!-- Main form posts to TeamDesk -->
+  <form name="frm" method="post" action="https://truebooks.teamdesk.net/secure/gateway.aspx?action=WebToRecord&app=93348&table=1726300">
+    <input type="hidden" name="retURL" value="https://truebooks.teamdesk.net">
+
+    <!-- Hidden answer fields (sent to TeamDesk) -->
+    <div class="hidden-fields">
+      <input type="hidden" name="f_75820593" id="ans_q1">
+      <input type="hidden" name="f_75820594" id="ans_q2">
+      <input type="hidden" name="f_75820595" id="ans_q3">
+      <input type="hidden" name="f_75820596" id="ans_q4">
+      <input type="hidden" name="f_75820597" id="ans_q5">
+      <input type="hidden" name="f_75820598" id="ans_q6">
+      <input type="hidden" name="f_75820599" id="ans_q7">
+      <input type="hidden" name="f_75820600" id="ans_q8">
+      <input type="hidden" name="f_75820601" id="ans_q9">
+      <input type="hidden" name="f_75820602" id="ans_q10">
+      <input type="hidden" name="f_75820603" id="ans_q11">
+      <input type="hidden" name="f_75820604" id="ans_q12">
+      <input type="hidden" name="f_75820605" id="ans_q13">
+      <input type="hidden" name="f_75820606" id="ans_q14">
+      <input type="hidden" name="f_75820649" id="outcome_field">
+    </div>
+
+    <div class="card">
+
+      <!-- Progress bar -->
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progress-text">Question 1</span>
+          <span id="progress-pct">—</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- ── Questions ── -->
+
+      <div class="question-block active" id="block-q1">
+        <div class="question-label">Question 1</div>
+        <div class="question-text">Was there a policy or process to manage this risk?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q1','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q1','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()" disabled>← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q2">
+        <div class="question-label">Question 2</div>
+        <div class="question-text">Was the policy or process followed?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q2','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q2','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q3">
+        <div class="question-label">Question 3</div>
+        <div class="question-text">Are there established procedures, processes, or structures to manage this risk that were not followed?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q3','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q3','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q4">
+        <div class="question-label">Question 4</div>
+        <div class="question-text">Does a policy, procedure, process or structure need to be developed?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q4','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q4','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q5">
+        <div class="question-label">Question 5</div>
+        <div class="question-text">Was the policy / process flawed, inadequate, or difficult to follow — OR did the employee lack understanding of it?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q5','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q5','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q6">
+        <div class="question-label">Question 6</div>
+        <div class="question-text">Did the employee's action or inaction contribute to the error?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q6','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q6','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q7">
+        <div class="question-label">Question 7</div>
+        <div class="question-text">Were the actions of the employee intended to deliberately harm the patient or employee?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q7','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q7','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q8">
+        <div class="question-label">Question 8</div>
+        <div class="question-text">Did the employee conceal the error or falsify the record?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q8','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q8','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q9">
+        <div class="question-label">Question 9</div>
+        <div class="question-text">Did the employee consciously take a substantial risk or demonstrate intentional disregard for the policy / process?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q9','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q9','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q10">
+        <div class="question-label">Question 10</div>
+        <div class="question-text">Is there a history of other similar or serious errors by this employee?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q10','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q10','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q11">
+        <div class="question-label">Question 11</div>
+        <div class="question-text">Could a reasonably prudent employee have done the same in similar circumstances?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q11','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q11','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q12">
+        <div class="question-label">Question 12</div>
+        <div class="question-text">Did the employee previously receive remediation or counseling for a similar error?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q12','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q12','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q13">
+        <div class="question-label">Question 13</div>
+        <div class="question-text">Were mitigating factors present that the organization accepts as justifiable?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q13','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q13','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <div class="question-block" id="block-q14">
+        <div class="question-label">Question 14</div>
+        <div class="question-text">Did the employee's actions or inaction ALSO contribute to the error (shared accountability with the system flaw)?</div>
+        <div class="answer-group">
+          <button type="button" class="answer-btn" onclick="answer('q14','Yes')">Yes</button>
+          <button type="button" class="answer-btn" onclick="answer('q14','No')">No</button>
+        </div>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <!-- ── Outcome Screen ── -->
+      <div class="outcome-screen" id="outcome-screen">
+        <div class="outcome-title">Algorithm Result</div>
+        <div class="outcome-badges" id="outcome-badges"></div>
+        <div class="outcome-note" id="outcome-note"></div>
+        <button type="submit" class="btn-submit">Submit to TeamDesk →</button>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <!-- ── Stop Screen ── -->
+      <div class="stop-screen" id="stop-screen">
+        <div class="stop-icon">✅</div>
+        <div class="stop-heading" id="stop-heading">No Further Action Required</div>
+        <div class="stop-message" id="stop-message"></div>
+        <button type="submit" class="btn-submit">Submit to TeamDesk →</button>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+    </div><!-- /.card -->
+  </form>
+
+  <script>
+    // ── State ──────────────────────────────────────────────
+    const answers  = {};        // { q1: 'Yes', q2: 'No', ... }
+    const history  = [];        // stack of screens visited
+    const outcomes = new Set(); // accumulated outcome labels
+    let   current  = 'q1';     // current question id
+
+    // ── Branching map ──────────────────────────────────────
+    // Each question returns { next, addOutcome } based on the answer
+    function getNext(q, ans) {
+      switch(q) {
+        case 'q1':  return ans === 'Yes' ? { next:'q2' }  : { next:'q3' };
+        case 'q2':  return ans === 'Yes' ? { next:'q6' }  : { next:'q5' };
+        case 'q3':  return ans === 'Yes' ? { next:'q5' }  : { next:'q4' };
+        case 'q4':
+          if (ans === 'Yes') return { next:'q14', addOutcome:'System Flaw' };
+          return { next:'stop', stopHeading:'No Further Action Needed', stopMsg:'The review is complete. No policy exists and none is needed. No further action is required at this time.' };
+        case 'q5':
+          if (ans === 'Yes') return { next:'q14', addOutcome:'System Flaw' };
+          return { next:'q6' };
+        case 'q6':
+          if (ans === 'Yes') return { next:'q7' };
+          return { next:'stop', stopHeading:'No Employee Action Needed', stopMsg:'The employee\'s action or inaction did not contribute to the error. No employee accountability applies.' };
+        case 'q7':
+          if (ans === 'Yes') return { next:'outcome', addOutcome:'Reckless Behavior (Deliberate)' };
+          return { next:'q8' };
+        case 'q8':
+          if (ans === 'Yes') return { next:'outcome', addOutcome:'Reckless Behavior (Concealment / Falsification)' };
+          return { next:'q9' };
+        case 'q9':
+          if (ans === 'Yes') return { next:'outcome', addOutcome:'Reckless Behavior' };
+          return { next:'q10' };
+        case 'q10': return ans === 'Yes' ? { next:'q12' } : { next:'q11' };
+        case 'q11':
+          if (ans === 'Yes') return { next:'outcome', addOutcome:'Human Error' };
+          return { next:'q13' };
+        case 'q12':
+          if (ans === 'Yes') return { next:'outcome', addOutcome:'At-Risk Behavior (Consider HR Consultation; Possible Escalation)' };
+          return { next:'q11' };
+        case 'q13':
+          if (ans === 'Yes') return { next:'outcome', addOutcome:'Human Error' };
+          return { next:'outcome', addOutcome:'At-Risk Behavior' };
+        case 'q14':
+          if (ans === 'Yes') return { next:'q7', note:'Evaluating employee accountability (shared with System Flaw)' };
+          return { next:'stop', stopHeading:'System Flaw Only — No Employee Bucket', stopMsg:'The system flaw has been identified. The employee\'s actions did not independently contribute. No employee accountability applies.' };
+        default: return { next:'outcome' };
+      }
+    }
+
+    // ── Answer handler ─────────────────────────────────────
+    function answer(q, val) {
+      // Save answer to state and hidden field
+      answers[q] = val;
+      const field = document.getElementById('ans_' + q);
+      if (field) field.value = val;
+
+      // Highlight selected button
+      const block = document.getElementById('block-' + q);
+      block.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+      block.querySelectorAll('.answer-btn').forEach(b => {
+        if (b.textContent.trim() === val) b.classList.add('selected');
+      });
+
+      // Short delay so selection is visible before transition
+      setTimeout(() => {
+        const result = getNext(q, val);
+
+        // Accumulate outcome if any
+        if (result.addOutcome) outcomes.add(result.addOutcome);
+
+        // Push current to history
+        history.push(current);
+        current = result.next;
+
+        if (result.next === 'outcome') {
+          showOutcome();
+        } else if (result.next === 'stop') {
+          showStop(result.stopHeading, result.stopMsg);
+        } else {
+          showQuestion(result.next);
+        }
+      }, 180);
+    }
+
+    // ── Show a question ────────────────────────────────────
+    function showQuestion(q) {
+      hideAll();
+      const block = document.getElementById('block-' + q);
+      block.classList.add('active');
+      current = q;
+
+      // Restore previously selected answer if user went back
+      if (answers[q]) {
+        block.querySelectorAll('.answer-btn').forEach(b => {
+          b.classList.toggle('selected', b.textContent.trim() === answers[q]);
+        });
+      } else {
+        block.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+      }
+
+      updateProgress(q);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Show outcome ───────────────────────────────────────
+    function showOutcome() {
+      hideAll();
+      const screen = document.getElementById('outcome-screen');
+      screen.classList.add('active');
+
+      // Build outcome badges
+      const badgesEl = document.getElementById('outcome-badges');
+      badgesEl.innerHTML = '';
+      outcomes.forEach(o => {
+        const badge = document.createElement('div');
+        badge.className = 'outcome-badge ' + getBadgeClass(o);
+        badge.textContent = o;
+        badgesEl.appendChild(badge);
+      });
+
+      // Write combined outcome to hidden TeamDesk field
+      document.getElementById('outcome_field').value = [...outcomes].join('; ');
+
+      // Note
+      document.getElementById('outcome-note').textContent =
+        'Review the result(s) above. Click "Submit to TeamDesk" to save this record.';
+
+      updateProgress('outcome');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Show stop ──────────────────────────────────────────
+    function showStop(heading, msg) {
+      hideAll();
+      const screen = document.getElementById('stop-screen');
+      screen.classList.add('active');
+      document.getElementById('stop-heading').textContent = heading;
+      document.getElementById('stop-message').textContent = msg;
+
+      // Write any accumulated outcomes (e.g. System Flaw only) to field
+      document.getElementById('outcome_field').value =
+        outcomes.size > 0 ? [...outcomes].join('; ') : 'No Further Action';
+
+      updateProgress('stop');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Go back ────────────────────────────────────────────
+    function goBack() {
+      if (history.length === 0) return;
+
+      // If going back from outcome/stop, don't remove the last outcome
+      // (outcomes are rebuilt from answers on forward traversal anyway)
+      const prev = history.pop();
+
+      // Remove the answer for current question so it resets
+      if (current !== 'outcome' && current !== 'stop') {
+        delete answers[current];
+        const field = document.getElementById('ans_' + current);
+        if (field) field.value = '';
+      }
+
+      // Recalculate outcomes from scratch based on remaining answers
+      recalcOutcomes();
+
+      current = prev;
+      if (prev === 'outcome') {
+        showOutcome();
+      } else if (prev === 'stop') {
+        // Can't really go back to stop cleanly, just go to previous question
+        const realPrev = history.pop();
+        current = realPrev;
+        showQuestion(realPrev);
+      } else {
+        showQuestion(prev);
+      }
+    }
+
+    // Recalculate outcomes set from scratch by replaying answered questions
+    function recalcOutcomes() {
+      outcomes.clear();
+      const questionOrder = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14'];
+      questionOrder.forEach(q => {
+        if (answers[q]) {
+          const result = getNext(q, answers[q]);
+          if (result.addOutcome) outcomes.add(result.addOutcome);
+        }
+      });
+    }
+
+    // ── Helpers ────────────────────────────────────────────
+    function hideAll() {
+      document.querySelectorAll('.question-block, .outcome-screen, .stop-screen')
+        .forEach(el => el.classList.remove('active'));
+    }
+
+    function getBadgeClass(outcome) {
+      if (outcome.includes('System Flaw'))   return 'system';
+      if (outcome.includes('Human Error'))   return 'human';
+      if (outcome.includes('At-Risk'))       return 'atrisk';
+      if (outcome.includes('Reckless'))      return 'reckless';
+      return 'stop';
+    }
+
+    function updateProgress(q) {
+      const steps = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','outcome'];
+      const idx   = steps.indexOf(q);
+      const pct   = idx < 0 ? 100 : Math.round(((idx) / (steps.length - 1)) * 100);
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent =
+        (q === 'outcome' || q === 'stop') ? 'Result' : 'Question ' + q.replace('q','');
+      document.getElementById('progress-pct').textContent = pct + '%';
+    }
+
+    // Init
+    updateProgress('q1');
+  </script>
+
+</body>
+</html>
