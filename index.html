@@ -253,6 +253,76 @@
 
     .btn-submit:hover { background: var(--steel); }
 
+    /* ── Final step screen ── */
+    .final-screen { display: none; }
+    .final-screen.active { display: block; }
+
+    .final-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .final-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .final-subtext {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .final-field {
+      margin-bottom: 20px;
+    }
+
+    .final-field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 7px;
+      letter-spacing: 0.02em;
+    }
+
+    .final-field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--navy);
+      background: var(--white);
+      transition: border-color 0.18s;
+      outline: none;
+    }
+
+    .final-field input:focus {
+      border-color: var(--accent);
+    }
+
+    .final-field input.error {
+      border-color: var(--outcome-reckless);
+    }
+
+    .field-error {
+      font-size: 0.78rem;
+      color: var(--outcome-reckless);
+      margin-top: 5px;
+      display: none;
+    }
+
+    .field-error.visible { display: block; }
+
     /* ── Stop screen ── */
     .stop-screen { display: none; }
     .stop-screen.active { display: block; }
@@ -316,6 +386,8 @@
       <input type="hidden" name="f_75820605" id="ans_q13">
       <input type="hidden" name="f_75820606" id="ans_q14">
       <input type="hidden" name="f_75820649" id="outcome_field">
+      <input type="hidden" name="f_75820707" id="leader_name_field">
+      <input type="hidden" name="f_75820708" id="date_field">
     </div>
 
     <div class="card">
@@ -323,7 +395,7 @@
       <!-- Progress bar -->
       <div class="progress-wrap">
         <div class="progress-label">
-          <span id="progress-text"></span>
+          <span id="progress-text">Question 1</span>
           <span id="progress-pct">—</span>
         </div>
         <div class="progress-bar-bg">
@@ -506,7 +578,7 @@
         <div class="outcome-title">Algorithm Result</div>
         <div class="outcome-badges" id="outcome-badges"></div>
         <div class="outcome-note" id="outcome-note"></div>
-        <button type="submit" class="btn-submit">Submit →</button>
+        <button type="button" class="btn-submit" onclick="goToFinal('outcome')">Continue →</button>
         <div class="nav-row">
           <button type="button" class="btn-back" onclick="goBack()">← Back</button>
         </div>
@@ -517,9 +589,33 @@
         <div class="stop-icon">✅</div>
         <div class="stop-heading" id="stop-heading">No Further Action Required</div>
         <div class="stop-message" id="stop-message"></div>
-        <button type="submit" class="btn-submit">Submit →</button>
+        <button type="button" class="btn-submit" onclick="goToFinal('stop')">Continue →</button>
         <div class="nav-row">
           <button type="button" class="btn-back" onclick="goBack()">← Back</button>
+        </div>
+      </div>
+
+      <!-- ── Final Step Screen ── -->
+      <div class="final-screen" id="final-screen">
+        <div class="final-title">Final Step</div>
+        <div class="final-heading">Leader Information</div>
+        <div class="final-subtext">Please enter your name and today's date before submitting.</div>
+
+        <div class="final-field">
+          <label for="input-leader-name">Name of Leader</label>
+          <input type="text" id="input-leader-name" placeholder="Enter full name" maxlength="40" oninput="clearError('name')">
+          <div class="field-error" id="error-name">Please enter the leader's name.</div>
+        </div>
+
+        <div class="final-field">
+          <label for="input-date">Date</label>
+          <input type="date" id="input-date" oninput="clearError('date')">
+          <div class="field-error" id="error-date">Please select a date.</div>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="submitFinal()" style="margin-top:8px;">Submit →</button>
+        <div class="nav-row">
+          <button type="button" class="btn-back" onclick="goBackFromFinal()">← Back</button>
         </div>
       </div>
 
@@ -651,7 +747,7 @@
 
       // Note
       document.getElementById('outcome-note').textContent =
-        'Review the result(s) above. Click "Submit" to save this record.';
+        'Review the result(s) above. Click "Continue" to finalize.';
 
       updateProgress('outcome');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -716,9 +812,72 @@
       });
     }
 
+    // ── Final step ─────────────────────────────────────────
+    let preFinalScreen = 'outcome'; // tracks which screen to go back to
+
+    function goToFinal(from) {
+      preFinalScreen = from;
+      hideAll();
+      document.getElementById('final-screen').classList.add('active');
+      // Pre-fill today's date
+      const today = new Date().toISOString().split('T')[0];
+      const dateInput = document.getElementById('input-date');
+      if (!dateInput.value) dateInput.value = today;
+      updateProgress('final');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goBackFromFinal() {
+      hideAll();
+      if (preFinalScreen === 'stop') {
+        document.getElementById('stop-screen').classList.add('active');
+      } else {
+        document.getElementById('outcome-screen').classList.add('active');
+      }
+      updateProgress(preFinalScreen);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function submitFinal() {
+      const name = document.getElementById('input-leader-name').value.trim();
+      const date = document.getElementById('input-date').value.trim();
+      let valid = true;
+
+      if (!name) {
+        document.getElementById('input-leader-name').classList.add('error');
+        document.getElementById('error-name').classList.add('visible');
+        valid = false;
+      }
+      if (!date) {
+        document.getElementById('input-date').classList.add('error');
+        document.getElementById('error-date').classList.add('visible');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Write values to hidden TeamDesk fields
+      document.getElementById('leader_name_field').value = name;
+      // Format date as MM/DD/YYYY for TeamDesk
+      const [y, m, d] = date.split('-');
+      document.getElementById('date_field').value = m + '/' + d + '/' + y;
+
+      // Submit the form
+      document.querySelector('form[name="frm"]').submit();
+    }
+
+    function clearError(field) {
+      if (field === 'name') {
+        document.getElementById('input-leader-name').classList.remove('error');
+        document.getElementById('error-name').classList.remove('visible');
+      } else {
+        document.getElementById('input-date').classList.remove('error');
+        document.getElementById('error-date').classList.remove('visible');
+      }
+    }
+
     // ── Helpers ────────────────────────────────────────────
     function hideAll() {
-      document.querySelectorAll('.question-block, .outcome-screen, .stop-screen')
+      document.querySelectorAll('.question-block, .outcome-screen, .stop-screen, .final-screen')
         .forEach(el => el.classList.remove('active'));
     }
 
@@ -731,12 +890,17 @@
     }
 
     function updateProgress(q) {
-      const steps = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','outcome'];
+      const steps = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','outcome','final'];
       const idx   = steps.indexOf(q);
       const pct   = idx < 0 ? 100 : Math.round(((idx) / (steps.length - 1)) * 100);
       document.getElementById('progress-fill').style.width = pct + '%';
-      document.getElementById('progress-text').textContent =
-        (q === 'outcome' || q === 'stop') ? 'Result' : 'Question ' + q.replace('q','');
+      if (q === 'final') {
+        document.getElementById('progress-text').textContent = 'Final Step';
+      } else if (q === 'outcome' || q === 'stop') {
+        document.getElementById('progress-text').textContent = 'Result';
+      } else {
+        document.getElementById('progress-text').textContent = 'Question ' + q.replace('q','');
+      }
       document.getElementById('progress-pct').textContent = pct + '%';
     }
 
