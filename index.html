@@ -290,7 +290,7 @@
 
   <!-- Header -->
   <div class="form-header">
-    <div class="eyebrow">Incident Review Tool</div>
+    
     <h1>Just Culture Algorithm</h1>
     <p>Answer each question honestly. You will be guided through based on your responses. Only one question is shown at a time.</p>
   </div>
@@ -506,7 +506,7 @@
         <div class="outcome-title">Algorithm Result</div>
         <div class="outcome-badges" id="outcome-badges"></div>
         <div class="outcome-note" id="outcome-note"></div>
-        <button type="submit" class="btn-submit">Submit to TeamDesk →</button>
+        <button type="submit" class="btn-submit">Submit →</button>
         <div class="nav-row">
           <button type="button" class="btn-back" onclick="goBack()">← Back</button>
         </div>
@@ -517,7 +517,7 @@
         <div class="stop-icon">✅</div>
         <div class="stop-heading" id="stop-heading">No Further Action Required</div>
         <div class="stop-message" id="stop-message"></div>
-        <button type="submit" class="btn-submit">Submit to TeamDesk →</button>
+        <button type="submit" class="btn-submit">Submit →</button>
         <div class="nav-row">
           <button type="button" class="btn-back" onclick="goBack()">← Back</button>
         </div>
@@ -651,7 +651,7 @@
 
       // Note
       document.getElementById('outcome-note').textContent =
-        'Review the result(s) above. Click "Submit to TeamDesk" to save this record.';
+        'Review the result(s) above. Click "Submit" to save this record.';
 
       updateProgress('outcome');
       window.scrollTo({ top: 0, behavior: 'smooth' });
