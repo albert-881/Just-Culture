@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
     const API_KEY = '71BD2A8197EB4DA9A5E93734545D4974';
-    const BASE    = 'https://truebooks.teamdesk.net/secure/api/v2/93348';
+    const APP_ID  = '93348';
   
     // Handle CORS preflight
     if (event.httpMethod === 'OPTIONS') {
@@ -15,29 +15,41 @@ exports.handler = async (event) => {
       };
     }
   
-    // Get query params passed from the HTML form
-    const params = new URLSearchParams(event.queryStringParameters || {});
-    params.set('token', API_KEY);
+    const params = event.queryStringParameters || {};
+    const table  = params.table  || '';
+    const filter = params.filter || '';
   
-    const url = `${BASE}/select.json?${params.toString()}`;
+    // Build field list
+    const fields = [];
+    if (params.field) fields.push(params.field);
+    // Netlify parses repeated params as a single string — collect all field params
+    const allParams = event.rawQuery || '';
+    const fieldMatches = [...allParams.matchAll(/field=([^&]+)/g)];
+    const fieldList = fieldMatches.map(m => decodeURIComponent(m[1]));
+  
+    // TeamDesk REST API — correct endpoint format
+    const url = `https://truebooks.teamdesk.net/secure/api/v2/${APP_ID}/${table}/select.json`;
+  
+    // Build POST body
+    const body = new URLSearchParams();
+    body.set('token', API_KEY);
+    if (filter) body.set('filter', filter);
+    fieldList.forEach(f => body.append('field', f));
+    if (params.sortby)    body.set('sortby',    params.sortby);
+    if (params.sortorder) body.set('sortorder', params.sortorder);
+    if (params.top)       body.set('top',       params.top);
   
     try {
-      // TeamDesk API requires POST
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
       });
   
-      if (!response.ok) {
-        const errText = await response.text();
-        return {
-          statusCode: response.status,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-          body: JSON.stringify({ error: `TeamDesk returned ${response.status}`, detail: errText })
-        };
-      }
+      const text = await response.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
   
-      const data = await response.json();
       return {
         statusCode: 200,
         headers: {
