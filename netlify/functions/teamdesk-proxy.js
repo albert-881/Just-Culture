@@ -20,29 +20,29 @@ exports.handler = async (event) => {
     const filter = params.filter || '';
   
     // Build field list from raw query string
-    const allParams  = event.rawQuery || '';
+    const allParams    = event.rawQuery || '';
     const fieldMatches = [...allParams.matchAll(/field=([^&]+)/g)];
-    const fieldList  = fieldMatches.map(m => decodeURIComponent(m[1]));
+    const fieldList    = fieldMatches.map(m => decodeURIComponent(m[1]));
   
-    // TeamDesk API URL — use table name directly
+    // TeamDesk API — token in Authorization header, POST with JSON body
     const url = `https://truebooks.teamdesk.net/secure/api/v2/${APP_ID}/select.json`;
   
-    // Build GET params
-    const body = new URLSearchParams();
-    body.set('token', API_KEY);
-    body.set('table', table);
-    if (filter) body.set('filter', filter);
-    fieldList.forEach(f => body.append('field', f));
-    if (params.sortby)    body.set('sortby',    params.sortby);
-    if (params.sortorder) body.set('sortorder', params.sortorder);
-    if (params.top)       body.set('top',       params.top);
+    const bodyObj = { table };
+    if (filter)           bodyObj.filter    = filter;
+    if (fieldList.length) bodyObj.field     = fieldList;
+    if (params.sortby)    bodyObj.sortby    = params.sortby;
+    if (params.sortorder) bodyObj.sortorder = params.sortorder;
+    if (params.top)       bodyObj.top       = parseInt(params.top);
   
     try {
-      // TeamDesk select endpoint requires GET — params go in URL
-      const getUrl = `${url}?${body.toString()}`;
-  
-      const response = await fetch(getUrl, {
-        method: 'GET'
+      // Try with Authorization header instead of token param
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Authorization': `Token ${API_KEY}`
+        },
+        body: JSON.stringify(bodyObj)
       });
   
       const text = await response.text();
@@ -55,7 +55,7 @@ exports.handler = async (event) => {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ debug_getUrl: getUrl, data })
+        body: JSON.stringify({ debug_url: url, debug_body: bodyObj, debug_status: response.status, data })
       };
     } catch (err) {
       return {
