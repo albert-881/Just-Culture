@@ -57,7 +57,7 @@ exports.handler = async (event) => {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ debug_getUrl: getUrl, data })
       };
     } catch (err) {
       return {
