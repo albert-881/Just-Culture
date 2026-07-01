@@ -40,10 +40,11 @@ exports.handler = async (event) => {
     if (params.top)       body.set('top',       params.top);
   
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: body.toString()
+      // TeamDesk select endpoint requires GET — params go in URL
+      const getUrl = `${url}?${body.toString()}`;
+  
+      const response = await fetch(getUrl, {
+        method: 'GET'
       });
   
       const text = await response.text();
@@ -56,7 +57,7 @@ exports.handler = async (event) => {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ debug_url: url, debug_body: body.toString(), data })
+        body: JSON.stringify(data)
       };
     } catch (err) {
       return {
