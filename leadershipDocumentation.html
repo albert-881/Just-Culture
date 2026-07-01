@@ -777,9 +777,10 @@
       }
 
       const url = `/.netlify/functions/teamdesk-proxy?` +
-        `table=${JC_TABLE}${filter}&` +
-        `field=ID&field=Outcome&field=Name of Leader&field=Date&` +
-        `sortby=Date&sortorder=desc&top=10`;
+        `table=Just%20Culture%20Forms&` +
+        `field=ID&field=Outcome&field=NameOfLeader&field=Date` +
+        (filter ? filter : '') +
+        `&sortby=Date&sortorder=desc&top=10`;
 
       const resp = await fetch(url);
       if (!resp.ok) throw new Error();
@@ -798,13 +799,13 @@
         div.dataset.outcome = rec['Outcome'] || '';
         div.innerHTML = `
           <div class="inc-outcome">📋 ${rec['Outcome'] || 'No outcome recorded'}</div>
-          <div class="inc-meta">Leader: ${rec['Name of Leader'] || '—'} &nbsp;|&nbsp; Date: ${rec['Date'] || '—'} &nbsp;|&nbsp; Record #${rec['ID']}</div>
+          <div class="inc-meta">Leader: ${rec['NameOfLeader'] || rec['Name of Leader'] || '—'} &nbsp;|&nbsp; Date: ${rec['Date'] || '—'} &nbsp;|&nbsp; Record #${rec['ID'] || rec['@row.id']}</div>
         `;
         div.onclick = () => selectIncident(div, rec);
         container.appendChild(div);
       });
-    } catch {
-      container.innerHTML = '<div class="no-results">Could not load records. Please check your connection.</div>';
+    } catch(e) {
+      container.innerHTML = `<div class="no-results">Could not load records. Error: ${e.message}</div>`;
     }
   }
 
