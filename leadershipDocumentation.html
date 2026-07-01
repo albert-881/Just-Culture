@@ -689,7 +689,7 @@
       const url = `/.netlify/functions/teamdesk-proxy?` +
         `table=${ROSTER_TABLE}&` +
         `filter=[EMPLOYEE ID] = ${encodeURIComponent(empId)}&` +
-        `field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME&field=JOB TITLE&field=DEPT NAME`;
+        `field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME&field=POSITION CONTROL&field=JOB TITLE`;
 
       const resp = await fetch(url);
       if (!resp.ok) throw new Error('API error');
@@ -697,11 +697,11 @@
 
       if (data && data.length > 0) {
         const emp = data[0];
-        const firstName = emp['FIRST NAME'] || '';
-        const lastName  = emp['LAST NAME']  || '';
+        const firstName = emp['FIRST NAME']       || '';
+        const lastName  = emp['LAST NAME']        || '';
         const fullName  = `${firstName} ${lastName}`.trim();
-        const jobTitle  = emp['JOB TITLE']  || '';
-        const dept      = emp['DEPT NAME']  || '';
+        const jobTitle  = emp['JOB TITLE']        || emp['POSITION CONTROL'] || '';
+        const dept      = emp['POSITION CONTROL'] || '';
 
         document.getElementById('inp_employee_name').value = fullName;
         document.getElementById('inp_job_title').value     = jobTitle;

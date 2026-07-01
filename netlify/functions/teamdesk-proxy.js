@@ -1,8 +1,8 @@
 exports.handler = async (event) => {
     const API_KEY = '71BD2A8197EB4DA9A5E93734545D4974';
     const APP_ID  = '93348';
+    const BASE    = `https://truebooks.teamdesk.net/secure/api/v2/${APP_ID}/${API_KEY}`;
   
-    // Handle CORS preflight
     if (event.httpMethod === 'OPTIONS') {
       return {
         statusCode: 200,
@@ -24,27 +24,18 @@ exports.handler = async (event) => {
     const fieldMatches = [...allParams.matchAll(/field=([^&]+)/g)];
     const fieldList    = fieldMatches.map(m => decodeURIComponent(m[1]));
   
-    // TeamDesk API — token in Authorization header, POST with JSON body
-    const url = `https://truebooks.teamdesk.net/secure/api/v2/${APP_ID}/select.json`;
+    // Correct TeamDesk URL: /api/v2/{appId}/{token}/{table}/select.json
+    const qs = new URLSearchParams();
+    if (filter) qs.set('filter', filter);
+    fieldList.forEach(f => qs.append('field', f));
+    if (params.sortby)    qs.set('sortby',    params.sortby);
+    if (params.sortorder) qs.set('sortorder', params.sortorder);
+    if (params.top)       qs.set('top',       params.top);
   
-    const bodyObj = { table };
-    if (filter)           bodyObj.filter    = filter;
-    if (fieldList.length) bodyObj.field     = fieldList;
-    if (params.sortby)    bodyObj.sortby    = params.sortby;
-    if (params.sortorder) bodyObj.sortorder = params.sortorder;
-    if (params.top)       bodyObj.top       = parseInt(params.top);
+    const url = `${BASE}/${encodeURIComponent(table)}/select.json?${qs.toString()}`;
   
     try {
-      // Try with Authorization header instead of token param
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type':  'application/json',
-          'Authorization': `Token ${API_KEY}`
-        },
-        body: JSON.stringify(bodyObj)
-      });
-  
+      const response = await fetch(url, { method: 'GET' });
       const text = await response.text();
       let data;
       try { data = JSON.parse(text); } catch { data = { raw: text }; }
@@ -55,7 +46,7 @@ exports.handler = async (event) => {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ debug_url: url, debug_body: bodyObj, debug_status: response.status, data })
+        body: JSON.stringify(data)
       };
     } catch (err) {
       return {
