@@ -710,7 +710,7 @@
         if (jobRowId) {
           const jobUrl = `/.netlify/functions/teamdesk-proxy?` +
             `table=JOB%20TITLE&` +
-            `filter=[Id]=${encodeURIComponent(jobRowId)}&` +
+            `filter=[Id]="${encodeURIComponent(jobRowId)}"&` +
             `field=JOB TITLE&field=DEPT NAME&field=DEPT CODE`;
 
           const jobResp = await fetch(jobUrl);
