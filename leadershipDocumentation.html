@@ -364,8 +364,14 @@
       <div class="step-subtitle">Select the Just Culture Algorithm record that corresponds to this incident.</div>
 
       <div class="field-group">
-        <label for="inp_search_incident">Search by date or outcome</label>
-        <input type="text" id="inp_search_incident" placeholder="e.g. Human Error or 6/29/2026" oninput="searchIncidents(this.value)">
+        <label for="inp_search_incident">Filter by Outcome (optional)</label>
+        <select id="inp_search_incident" onchange="searchIncidents(this.value)">
+          <option value="">— Show All Records —</option>
+          <option value="System Flaw">System Flaw</option>
+          <option value="Human Error">Human Error</option>
+          <option value="At-Risk Behavior">At-Risk Behavior</option>
+          <option value="Reckless Behavior">Reckless Behavior</option>
+        </select>
       </div>
 
       <div class="incident-results" id="incident-results">
@@ -590,6 +596,9 @@
     updateProgress(n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    // Auto-load incidents when step 2 becomes active
+    if (n === 2) fetchIncidents('');
+
     // Set today's date on signature step
     if (n === 7) {
       const today = new Date().toLocaleDateString('en-US');
@@ -760,10 +769,8 @@
   }
 
   // ── Incident search ─────────────────────────────────────
-  let searchTimer = null;
   function searchIncidents(query) {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => fetchIncidents(query), 400);
+    fetchIncidents(query);
   }
 
   async function fetchIncidents(query) {
@@ -773,7 +780,7 @@
     try {
       let filter = '';
       if (query.trim()) {
-        filter = `&filter=[Outcome] like "%25${encodeURIComponent(query.trim())}%25"`;
+        filter = `&filter=[Outcome]="${encodeURIComponent(query.trim())}"`;
       }
 
       const url = `/.netlify/functions/teamdesk-proxy?` +
