@@ -19,20 +19,18 @@ exports.handler = async (event) => {
     const table  = params.table  || '';
     const filter = params.filter || '';
   
-    // Build field list
-    const fields = [];
-    if (params.field) fields.push(params.field);
-    // Netlify parses repeated params as a single string — collect all field params
-    const allParams = event.rawQuery || '';
+    // Build field list from raw query string
+    const allParams  = event.rawQuery || '';
     const fieldMatches = [...allParams.matchAll(/field=([^&]+)/g)];
-    const fieldList = fieldMatches.map(m => decodeURIComponent(m[1]));
+    const fieldList  = fieldMatches.map(m => decodeURIComponent(m[1]));
   
-    // TeamDesk REST API — correct endpoint format
-    const url = `https://truebooks.teamdesk.net/secure/api/v2/${APP_ID}/${table}/select.json`;
+    // TeamDesk API URL — use table name directly
+    const url = `https://truebooks.teamdesk.net/secure/api/v2/${APP_ID}/select.json`;
   
-    // Build POST body
+    // Build GET params
     const body = new URLSearchParams();
     body.set('token', API_KEY);
+    body.set('table', table);
     if (filter) body.set('filter', filter);
     fieldList.forEach(f => body.append('field', f));
     if (params.sortby)    body.set('sortby',    params.sortby);
