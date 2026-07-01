@@ -689,7 +689,7 @@
       const url = `/.netlify/functions/teamdesk-proxy?` +
         `table=${ROSTER_TABLE}&` +
         `filter=[EMPLOYEE ID] = ${encodeURIComponent(empId)}&` +
-        `field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME&field=POSITION CONTROL&field=JOB TITLE`;
+        `field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME&field=POSITION CONTROL&field=JOB CODE (Reference)`;
 
       const resp = await fetch(url);
       if (!resp.ok) throw new Error('API error');
@@ -697,18 +697,43 @@
 
       if (data && data.length > 0) {
         const emp = data[0];
-        const firstName = emp['FIRST NAME']       || '';
-        const lastName  = emp['LAST NAME']        || '';
-        const fullName  = `${firstName} ${lastName}`.trim();
-        const jobTitle  = emp['JOB TITLE']        || emp['POSITION CONTROL'] || '';
-        const dept      = emp['POSITION CONTROL'] || '';
+        const firstName  = emp['FIRST NAME'] || '';
+        const lastName   = emp['LAST NAME']  || '';
+        const fullName   = `${firstName} ${lastName}`.trim();
+        const jobRowId   = emp['JOB CODE (Reference)'] || '';
 
         document.getElementById('inp_employee_name').value = fullName;
-        document.getElementById('inp_job_title').value     = jobTitle;
-        document.getElementById('inp_department').value    = dept;
+        status.className = 'lookup-status loading';
+        status.textContent = `Found ${fullName} — loading job details...`;
 
-        status.className = 'lookup-status success';
-        status.textContent = `✅ Found: ${fullName} — ${jobTitle} — ${dept}`;
+        // Second lookup — get JOB TITLE and DEPT NAME using row ID
+        if (jobRowId) {
+          const jobUrl = `/.netlify/functions/teamdesk-proxy?` +
+            `table=JOB%20TITLE&` +
+            `filter=[@row.id]=${encodeURIComponent(jobRowId)}&` +
+            `field=JOB TITLE&field=DEPT NAME&field=DEPT CODE`;
+
+          const jobResp = await fetch(jobUrl);
+          const jobData = await jobResp.json();
+
+          if (jobData && jobData.length > 0) {
+            const job = jobData[0];
+            document.getElementById('inp_job_title').value  = job['JOB TITLE'] || '';
+            document.getElementById('inp_department').value = job['DEPT NAME']  || '';
+            status.className = 'lookup-status success';
+            status.textContent = `✅ Found: ${fullName} — ${job['JOB TITLE'] || ''} — ${job['DEPT NAME'] || ''}`;
+          } else {
+            // fallback — use position control if job lookup fails
+            document.getElementById('inp_department').value = emp['POSITION CONTROL'] || '';
+            status.className = 'lookup-status success';
+            status.textContent = `✅ Found: ${fullName}`;
+          }
+        } else {
+          document.getElementById('inp_department').value = emp['POSITION CONTROL'] || '';
+          status.className = 'lookup-status success';
+          status.textContent = `✅ Found: ${fullName}`;
+        }
+
         employeeLookupDone = true;
         document.getElementById('err_employee_id').classList.remove('visible');
       } else {
