@@ -773,8 +773,7 @@
     try {
       let filter = '';
       if (query.trim()) {
-        filter = `&filter=[Outcome] contains "${encodeURIComponent(query)}"`;
-      }
+        filter = `&filter=[Outcome] like "%${encodeURIComponent(query)}%"`;      }
 
       const url = `/.netlify/functions/teamdesk-proxy?` +
         `table=Just%20Culture%20Form&` +
