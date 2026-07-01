@@ -1,6 +1,885 @@
-Step 2 of 7
-Link to Attachment A
-Select the Just Culture Algorithm record that corresponds to this incident.
-Search by date or outcome
-System Flaw
-Could not load records. Error: data.forEach is not a function
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Just Culture — Leadership Documentation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #1B2A4A;
+      --steel:   #2E4A7A;
+      --accent:  #4A90C4;
+      --soft-bg: #F0F4F9;
+      --white:   #FFFFFF;
+      --border:  #D0DCE8;
+      --text:    #1B2A4A;
+      --muted:   #6B7E99;
+      --success: #2E7D5B;
+      --error:   #9B2335;
+      --warning: #B8860B;
+      --outcome-system:   #2E6B9E;
+      --outcome-human:    #2E7D5B;
+      --outcome-atrisk:   #B8860B;
+      --outcome-reckless: #9B2335;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--soft-bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 80px;
+    }
+
+    .form-header {
+      text-align: center;
+      max-width: 680px;
+      margin-bottom: 40px;
+    }
+    .form-header .eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+    .form-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem; color: var(--navy); margin-bottom: 14px; line-height: 1.15;
+    }
+    .form-header p { font-size: 0.95rem; color: var(--muted); line-height: 1.7; }
+
+    /* Card */
+    .card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 14px; padding: 40px 44px;
+      width: 100%; max-width: 680px;
+      box-shadow: 0 4px 24px rgba(27,42,74,0.08);
+    }
+
+    /* Progress */
+    .progress-wrap { margin-bottom: 32px; }
+    .progress-label {
+      font-size: 0.78rem; font-weight: 500; color: var(--muted);
+      margin-bottom: 8px; display: flex; justify-content: space-between;
+    }
+    .progress-bar-bg { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s ease; }
+
+    /* Steps */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .step-label {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
+    }
+    .step-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem; color: var(--navy); margin-bottom: 6px;
+    }
+    .step-subtitle {
+      font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 28px;
+    }
+
+    /* Fields */
+    .field-group { margin-bottom: 20px; }
+    .field-group label {
+      display: block; font-size: 0.82rem; font-weight: 600;
+      color: var(--navy); margin-bottom: 7px;
+    }
+    .field-group label .required { color: var(--error); margin-left: 2px; }
+    .field-group input[type="text"],
+    .field-group input[type="number"],
+    .field-group input[type="date"],
+    .field-group input[type="file"],
+    .field-group textarea,
+    .field-group select {
+      width: 100%; padding: 12px 14px;
+      border: 2px solid var(--border); border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: 0.95rem;
+      color: var(--navy); background: var(--white);
+      transition: border-color 0.18s; outline: none;
+    }
+    .field-group textarea { resize: vertical; min-height: 100px; }
+    .field-group input:focus,
+    .field-group textarea:focus { border-color: var(--accent); }
+    .field-group input.error,
+    .field-group textarea.error { border-color: var(--error); }
+    .field-error { font-size: 0.78rem; color: var(--error); margin-top: 5px; display: none; }
+    .field-error.visible { display: block; }
+
+    /* Auto-filled read-only fields */
+    .field-group input.autofilled {
+      background: #EBF3FA; border-color: var(--accent);
+      color: var(--steel); font-weight: 500;
+    }
+
+    /* Lookup status */
+    .lookup-status {
+      margin-top: 8px; padding: 10px 14px; border-radius: 8px;
+      font-size: 0.88rem; font-weight: 500; display: none;
+    }
+    .lookup-status.success {
+      background: #E8F5EF; color: var(--success);
+      border: 1px solid #A8D5BE; display: block;
+    }
+    .lookup-status.error {
+      background: #FBEAEC; color: var(--error);
+      border: 1px solid #E8A0AA; display: block;
+    }
+    .lookup-status.loading {
+      background: #EBF3FA; color: var(--accent);
+      border: 1px solid var(--border); display: block;
+    }
+
+    /* Two col grid */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Outcome checkboxes */
+    .outcome-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
+    .outcome-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px; border-radius: 10px; border: 2px solid var(--border);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .outcome-item input[type="checkbox"] { margin-top: 2px; width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--accent); }
+    .outcome-item-text strong { display: block; font-size: 0.92rem; font-weight: 600; }
+    .outcome-item-text span { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .outcome-item.system  { border-color: var(--outcome-system);  background: #EBF3FA; }
+    .outcome-item.human   { border-color: var(--outcome-human);   background: #E8F5EF; }
+    .outcome-item.atrisk  { border-color: var(--outcome-atrisk);  background: #FDF8E7; }
+    .outcome-item.reckless{ border-color: var(--outcome-reckless);background: #FBEAEC; }
+    .outcome-item.disabled { opacity: 0.45; pointer-events: none; }
+    .outcome-note {
+      font-size: 0.82rem; color: var(--muted); padding: 10px 14px;
+      background: var(--soft-bg); border-radius: 8px; line-height: 1.6;
+    }
+
+    /* HR escalation notice */
+    .hr-notice {
+      background: #FDF8E7; border: 1px solid var(--warning);
+      border-radius: 10px; padding: 16px 18px; margin-bottom: 20px;
+    }
+    .hr-notice-title {
+      font-size: 0.82rem; font-weight: 700; color: var(--warning);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;
+    }
+    .hr-notice ul { padding-left: 18px; }
+    .hr-notice ul li { font-size: 0.85rem; color: var(--text); line-height: 1.7; }
+    .hr-notice-footer {
+      margin-top: 10px; font-size: 0.82rem; color: var(--muted);
+      font-style: italic; line-height: 1.5;
+    }
+
+    /* Yes/No toggle for HR */
+    .yn-group { display: flex; gap: 12px; margin-bottom: 20px; }
+    .yn-btn {
+      flex: 1; padding: 14px; border-radius: 10px; border: 2px solid var(--border);
+      background: var(--white); font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; font-weight: 500; color: var(--navy);
+      cursor: pointer; transition: all 0.18s;
+    }
+    .yn-btn:hover { border-color: var(--accent); background: #EBF3FA; }
+    .yn-btn.selected-yes { border-color: var(--error); background: #FBEAEC; color: var(--error); }
+    .yn-btn.selected-no  { border-color: var(--success); background: #E8F5EF; color: var(--success); }
+
+    /* HR conditional fields */
+    .hr-fields { display: none; }
+    .hr-fields.visible { display: block; }
+
+    /* Signature section */
+    .sig-block {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px; margin-bottom: 16px;
+    }
+    .sig-block-title {
+      font-size: 0.82rem; font-weight: 600; color: var(--navy);
+      margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .sig-block-note { font-size: 0.78rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+    .sig-block input[type="file"] {
+      width: 100%; padding: 10px 14px; border: 2px dashed var(--border);
+      border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      background: var(--soft-bg); color: var(--muted); cursor: pointer;
+    }
+
+    /* Nav */
+    .nav-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);
+    }
+    .btn-back {
+      background: none; border: none; font-family: 'Inter', sans-serif;
+      font-size: 0.88rem; font-weight: 500; color: var(--muted);
+      cursor: pointer; padding: 8px 0; transition: color 0.15s;
+    }
+    .btn-back:hover { color: var(--navy); }
+    .btn-back:disabled { opacity: 0.3; cursor: default; }
+    .btn-next {
+      padding: 13px 28px; background: var(--navy); color: var(--white);
+      border: none; border-radius: 10px; font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.18s;
+    }
+    .btn-next:hover { background: var(--steel); }
+    .btn-submit {
+      width: 100%; padding: 15px; background: var(--navy); color: var(--white);
+      border: none; border-radius: 10px; font-family: 'Inter', sans-serif;
+      font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.18s;
+      margin-top: 8px;
+    }
+    .btn-submit:hover { background: var(--steel); }
+
+    /* Incident search results */
+    .incident-results { margin-top: 10px; }
+    .incident-option {
+      padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px;
+      margin-bottom: 8px; cursor: pointer; transition: all 0.15s;
+    }
+    .incident-option:hover { border-color: var(--accent); background: #EBF3FA; }
+    .incident-option.selected { border-color: var(--accent); background: var(--accent); color: var(--white); }
+    .incident-option.selected .inc-meta { color: rgba(255,255,255,0.8); }
+    .inc-outcome { font-size: 0.92rem; font-weight: 600; }
+    .inc-meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .no-results { font-size: 0.88rem; color: var(--muted); padding: 12px; text-align: center; }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 22px; }
+      .form-header h1 { font-size: 1.8rem; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-header">
+  <div class="eyebrow">Just Culture Program</div>
+  <h1>Leadership Documentation</h1>
+  <p>Complete this form after finishing the Just Culture Algorithm (Attachment A). It links to that outcome and documents the action plan and acknowledgments.</p>
+</div>
+
+<form name="frm" method="post"
+  action="https://truebooks.teamdesk.net/secure/gateway.aspx?action=WebToRecord&app=93348&table=1727698"
+  enctype="multipart/form-data">
+
+  <input type="hidden" name="retURL" value="https://truebooks.teamdesk.net">
+
+  <!-- Hidden fields for TeamDesk -->
+  <input type="hidden" name="f_75888626" id="h_employee_name">
+  <input type="hidden" name="f_75888627" id="h_employee_id">
+  <input type="hidden" name="f_75888628" id="h_job_title">
+  <input type="hidden" name="f_75888629" id="h_department">
+  <input type="hidden" name="f_75888630" id="h_date_of_event">
+  <input type="hidden" name="f_75888631" id="h_leader_name">
+  <input type="hidden" name="f_75888632" id="h_leader_title">
+  <input type="hidden" name="f_75888633" id="h_action_behavior">
+  <input type="hidden" name="f_75888634" id="h_outcome_system">
+  <input type="hidden" name="f_75888635" id="h_outcome_human">
+  <input type="hidden" name="f_75888722" id="h_outcome_atrisk">
+  <input type="hidden" name="f_75888723" id="h_outcome_reckless">
+  <input type="hidden" name="f_75888724" id="h_employee_action">
+  <input type="hidden" name="f_75888725" id="h_system_action">
+  <input type="hidden" name="f_75888726" id="h_followup_date">
+  <input type="hidden" name="f_75888727" id="h_followup_owner">
+  <input type="hidden" name="f_75888728" id="h_hr_escalation">
+  <input type="hidden" name="f_75888729" id="h_hr_contact">
+  <input type="hidden" name="f_75888730" id="h_hr_date">
+  <input type="hidden" name="f_75888734" id="h_jcform_link">
+
+  <div class="card">
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">Step 1 of 7</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- ── STEP 1: Employee Lookup ── -->
+    <div class="step active" id="step-1">
+      <div class="step-label">Step 1 of 7</div>
+      <div class="step-title">Event &amp; Employee Information</div>
+      <div class="step-subtitle">Enter the employee's ID number to auto-fill their information from the roster.</div>
+
+      <div class="field-group">
+        <label for="inp_employee_id">Employee ID <span class="required">*</span></label>
+        <input type="text" id="inp_employee_id" placeholder="Enter employee ID number">
+        <div class="lookup-status" id="emp-lookup-status"></div>
+        <div class="field-error" id="err_employee_id">Please enter a valid Employee ID.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Employee Name</label>
+          <input type="text" id="inp_employee_name" placeholder="Auto-filled" readonly class="autofilled">
+        </div>
+        <div class="field-group">
+          <label>Job Title</label>
+          <input type="text" id="inp_job_title" placeholder="Auto-filled" readonly class="autofilled">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Department</label>
+        <input type="text" id="inp_department" placeholder="Auto-filled" readonly class="autofilled">
+      </div>
+
+      <div class="field-group">
+        <label for="inp_date_of_event">Date of Event <span class="required">*</span></label>
+        <input type="date" id="inp_date_of_event">
+        <div class="field-error" id="err_date_of_event">Please enter the date of the event.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label for="inp_leader_name">Leader Name <span class="required">*</span></label>
+          <input type="text" id="inp_leader_name" placeholder="Enter your name">
+          <div class="field-error" id="err_leader_name">Please enter the leader's name.</div>
+        </div>
+        <div class="field-group">
+          <label for="inp_leader_title">Leader Title <span class="required">*</span></label>
+          <input type="text" id="inp_leader_title" placeholder="Enter your title">
+          <div class="field-error" id="err_leader_title">Please enter the leader's title.</div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" disabled>← Back</button>
+        <button type="button" class="btn-next" onclick="nextStep(1)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: Link to Attachment A ── -->
+    <div class="step" id="step-2">
+      <div class="step-label">Step 2 of 7</div>
+      <div class="step-title">Link to Attachment A</div>
+      <div class="step-subtitle">Select the Just Culture Algorithm record that corresponds to this incident.</div>
+
+      <div class="field-group">
+        <label for="inp_search_incident">Search by date or outcome</label>
+        <input type="text" id="inp_search_incident" placeholder="e.g. Human Error or 6/29/2026" oninput="searchIncidents(this.value)">
+      </div>
+
+      <div class="incident-results" id="incident-results">
+        <div class="no-results">Type above to search for an Attachment A record.</div>
+      </div>
+      <div class="field-error" id="err_incident">Please select a related Attachment A record.</div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goToStep(1)">← Back</button>
+        <button type="button" class="btn-next" onclick="nextStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: Action / Behavior Description ── -->
+    <div class="step" id="step-3">
+      <div class="step-label">Step 3 of 7</div>
+      <div class="step-title">Action / Behavior Description</div>
+      <div class="step-subtitle">Describe the action or behavior under review. Be objective and factual.</div>
+
+      <div class="field-group">
+        <label for="inp_action_behavior">Description <span class="required">*</span></label>
+        <textarea id="inp_action_behavior" rows="6"
+          placeholder="Include the applicable policy, procedure, or process with policy number / title if known..."></textarea>
+        <div class="field-error" id="err_action_behavior">Please provide a description of the action or behavior.</div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goToStep(2)">← Back</button>
+        <button type="button" class="btn-next" onclick="nextStep(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: Outcome ── -->
+    <div class="step" id="step-4">
+      <div class="step-label">Step 4 of 7</div>
+      <div class="step-title">Outcome</div>
+      <div class="step-subtitle">The outcome below is pre-filled from Attachment A. Verify and confirm.</div>
+
+      <div class="outcome-list">
+        <label class="outcome-item system" id="oc-system">
+          <input type="checkbox" id="chk_system">
+          <div class="outcome-item-text">
+            <strong>System Flaw</strong>
+            <span>Correct the system. May apply alone, or together with an employee bucket below (shared accountability).</span>
+          </div>
+        </label>
+        <label class="outcome-item human" id="oc-human">
+          <input type="checkbox" id="chk_human">
+          <div class="outcome-item-text">
+            <strong>Human Error</strong>
+            <span>Console / coach the employee.</span>
+          </div>
+        </label>
+        <label class="outcome-item atrisk" id="oc-atrisk">
+          <input type="checkbox" id="chk_atrisk">
+          <div class="outcome-item-text">
+            <strong>At-Risk Behavior</strong>
+            <span>Coach / re-train the employee.</span>
+          </div>
+        </label>
+        <label class="outcome-item reckless" id="oc-reckless">
+          <input type="checkbox" id="chk_reckless">
+          <div class="outcome-item-text">
+            <strong>Reckless Behavior</strong>
+            <span>Discipline; notify HR.</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="outcome-note" style="margin-top:12px;">
+        These outcomes are pre-filled from the Attachment A algorithm result. You may adjust if needed.
+      </div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goToStep(3)">← Back</button>
+        <button type="button" class="btn-next" onclick="nextStep(4)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 5: Action Plan ── -->
+    <div class="step" id="step-5">
+      <div class="step-label">Step 5 of 7</div>
+      <div class="step-title">Action Plan &amp; Follow-Up</div>
+      <div class="step-subtitle">Document what the employee and the organization will do as a result of this review.</div>
+
+      <div class="field-group">
+        <label for="inp_employee_action">Employee Action Items <span class="required">*</span></label>
+        <textarea id="inp_employee_action" rows="4"
+          placeholder="What will the employee do? (e.g., coaching, re-training, documented education, PIP)"></textarea>
+        <div class="field-error" id="err_employee_action">Please enter employee action items.</div>
+      </div>
+
+      <div class="field-group">
+        <label for="inp_system_action">System / Process Action Items <span class="required">*</span></label>
+        <textarea id="inp_system_action" rows="4"
+          placeholder="What will the organization do? (e.g., policy development, system modification, training, communication)"></textarea>
+        <div class="field-error" id="err_system_action">Please enter system or process action items.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label for="inp_followup_date">Follow-Up Date <span class="required">*</span></label>
+          <input type="date" id="inp_followup_date">
+          <div class="field-error" id="err_followup_date">Please select a follow-up date.</div>
+        </div>
+        <div class="field-group">
+          <label for="inp_followup_owner">Follow-Up Owner <span class="required">*</span></label>
+          <input type="text" id="inp_followup_owner" placeholder="Name / role responsible">
+          <div class="field-error" id="err_followup_owner">Please enter a follow-up owner.</div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goToStep(4)">← Back</button>
+        <button type="button" class="btn-next" onclick="nextStep(5)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 6: HR Escalation ── -->
+    <div class="step" id="step-6">
+      <div class="step-label">Step 6 of 7</div>
+      <div class="step-title">HR Escalation</div>
+      <div class="step-subtitle">Review the criteria below and indicate whether HR is being notified.</div>
+
+      <div class="hr-notice">
+        <div class="hr-notice-title">⚠️ Notify HR if any of the following apply:</div>
+        <ul>
+          <li>Outcome is Reckless Behavior (includes deliberate harm or concealment / falsification)</li>
+          <li>Suspected impairment, substance use, or known medical condition</li>
+          <li>Repetitive errors or repetitive at-risk behavior by the same employee</li>
+          <li>Patient/staff harm, regulatory exposure, HIPAA, discrimination, or harassment concerns</li>
+          <li>A Performance Improvement Plan (PIP) is being considered</li>
+        </ul>
+        <div class="hr-notice-footer">Otherwise, leader-managed. Leaders may always escalate to HR at their discretion when risk warrants additional review.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Is HR being notified for this event? <span class="required">*</span></label>
+        <div class="yn-group">
+          <button type="button" class="yn-btn" id="hr-yes" onclick="setHR(true)">Yes — Notify HR</button>
+          <button type="button" class="yn-btn" id="hr-no"  onclick="setHR(false)">No — Leader Managed</button>
+        </div>
+        <div class="field-error" id="err_hr">Please indicate whether HR is being notified.</div>
+      </div>
+
+      <div class="hr-fields" id="hr-fields">
+        <div class="field-row">
+          <div class="field-group">
+            <label for="inp_hr_contact">HR Contact Name</label>
+            <input type="text" id="inp_hr_contact" placeholder="HR representative name">
+          </div>
+          <div class="field-group">
+            <label for="inp_hr_date">HR Notification Date</label>
+            <input type="date" id="inp_hr_date">
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goToStep(5)">← Back</button>
+        <button type="button" class="btn-next" onclick="nextStep(6)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 7: Signatures ── -->
+    <div class="step" id="step-7">
+      <div class="step-label">Step 7 of 7</div>
+      <div class="step-title">Signatures</div>
+      <div class="step-subtitle">Upload or capture signatures for the leader, employee, and witness.</div>
+
+      <div class="sig-block">
+        <div class="sig-block-title">Leader Signature</div>
+        <div class="sig-block-note">Date: <span id="sig-date-leader"></span></div>
+        <input type="file" name="f_75888731" accept="image/*" capture="environment">
+      </div>
+
+      <div class="sig-block">
+        <div class="sig-block-title">Employee Acknowledgment</div>
+        <div class="sig-block-note">
+          My signature acknowledges this matter has been reviewed and discussed with me.
+          It does not necessarily indicate agreement.<br><br>
+          Date: <span id="sig-date-employee"></span>
+        </div>
+        <input type="file" name="f_75888732" accept="image/*" capture="environment">
+      </div>
+
+      <div class="sig-block">
+        <div class="sig-block-title">Witness Signature</div>
+        <div class="sig-block-note">Date: <span id="sig-date-witness"></span></div>
+        <input type="file" name="f_75888733" accept="image/*" capture="environment">
+      </div>
+
+      <button type="button" class="btn-submit" onclick="submitForm()">Submit to TeamDesk →</button>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goToStep(6)">← Back</button>
+      </div>
+    </div>
+
+  </div><!-- /.card -->
+</form>
+
+<script>
+  // ── Config ─────────────────────────────────────────────
+  const API_KEY  = '71BD2A8197EB4DA9A5E93734545D4974';
+  const APP_ID   = '93348';
+  const ROSTER_TABLE   = 'ROSTER';
+  const JC_TABLE       = '1726300';
+
+  // ── State ───────────────────────────────────────────────
+  let currentStep   = 1;
+  const TOTAL_STEPS = 7;
+  let employeeLookupDone = false;
+  let selectedIncident   = null;
+  let hrNotified         = null;
+
+  // ── Step navigation ─────────────────────────────────────
+  function goToStep(n) {
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    currentStep = n;
+    document.getElementById(`step-${n}`).classList.add('active');
+    updateProgress(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Set today's date on signature step
+    if (n === 7) {
+      const today = new Date().toLocaleDateString('en-US');
+      document.getElementById('sig-date-leader').textContent   = today;
+      document.getElementById('sig-date-employee').textContent = today;
+      document.getElementById('sig-date-witness').textContent  = today;
+    }
+  }
+
+  function nextStep(from) {
+    if (!validateStep(from)) return;
+    goToStep(from + 1);
+  }
+
+  function updateProgress(n) {
+    const pct = Math.round(((n - 1) / (TOTAL_STEPS - 1)) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = `Step ${n} of ${TOTAL_STEPS}`;
+    document.getElementById('progress-pct').textContent  = pct + '%';
+  }
+
+  // ── Validation ──────────────────────────────────────────
+  function validateStep(step) {
+    let valid = true;
+
+    const require = (id, errId) => {
+      const el = document.getElementById(id);
+      const val = el ? el.value.trim() : '';
+      if (!val) {
+        if (el) el.classList.add('error');
+        document.getElementById(errId).classList.add('visible');
+        valid = false;
+      } else {
+        if (el) el.classList.remove('error');
+        document.getElementById(errId).classList.remove('visible');
+      }
+    };
+
+    if (step === 1) {
+      if (!employeeLookupDone) {
+        document.getElementById('err_employee_id').classList.add('visible');
+        valid = false;
+      }
+      require('inp_date_of_event', 'err_date_of_event');
+      require('inp_leader_name',   'err_leader_name');
+      require('inp_leader_title',  'err_leader_title');
+    }
+
+    if (step === 2) {
+      if (!selectedIncident) {
+        document.getElementById('err_incident').classList.add('visible');
+        valid = false;
+      } else {
+        document.getElementById('err_incident').classList.remove('visible');
+      }
+    }
+
+    if (step === 3) require('inp_action_behavior', 'err_action_behavior');
+
+    if (step === 5) {
+      require('inp_employee_action', 'err_employee_action');
+      require('inp_system_action',   'err_system_action');
+      require('inp_followup_date',   'err_followup_date');
+      require('inp_followup_owner',  'err_followup_owner');
+    }
+
+    if (step === 6) {
+      if (hrNotified === null) {
+        document.getElementById('err_hr').classList.add('visible');
+        valid = false;
+      } else {
+        document.getElementById('err_hr').classList.remove('visible');
+      }
+    }
+
+    return valid;
+  }
+
+  // ── Employee lookup via TeamDesk API ────────────────────
+  let lookupTimer = null;
+  document.getElementById('inp_employee_id').addEventListener('input', function() {
+    clearTimeout(lookupTimer);
+    const val = this.value.trim();
+    if (!val) {
+      resetEmployeeFields();
+      return;
+    }
+    lookupTimer = setTimeout(() => lookupEmployee(val), 600);
+  });
+
+  async function lookupEmployee(empId) {
+    const status = document.getElementById('emp-lookup-status');
+    status.className = 'lookup-status loading';
+    status.textContent = 'Looking up employee...';
+
+    try {
+      const url = `/.netlify/functions/teamdesk-proxy?` +
+        `table=${ROSTER_TABLE}&` +
+        `filter=[EMPLOYEE ID] = ${encodeURIComponent(empId)}&` +
+        `field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME&field=POSITION CONTROL&field=JOB CODE (Reference)`;
+
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error('API error');
+      const data = await resp.json();
+
+      if (data && data.length > 0) {
+        const emp = data[0];
+        const firstName  = emp['FIRST NAME'] || '';
+        const lastName   = emp['LAST NAME']  || '';
+        const fullName   = `${firstName} ${lastName}`.trim();
+        const jobRowId   = emp['JOB CODE (Reference)'] || '';
+
+        document.getElementById('inp_employee_name').value = fullName;
+        status.className = 'lookup-status loading';
+        status.textContent = `Found ${fullName} — loading job details...`;
+
+        // Second lookup — get JOB TITLE and DEPT NAME using row ID
+        if (jobRowId) {
+          const jobUrl = `/.netlify/functions/teamdesk-proxy?` +
+            `table=JOB%20TITLE&` +
+            `filter=[Id]="${encodeURIComponent(jobRowId)}"&` +
+            `field=JOB TITLE&field=DEPT NAME&field=DEPT CODE`;
+
+          const jobResp = await fetch(jobUrl);
+          const jobData = await jobResp.json();
+
+          if (jobData && jobData.length > 0) {
+            const job = jobData[0];
+            document.getElementById('inp_job_title').value  = job['JOB TITLE'] || '';
+            document.getElementById('inp_department').value = job['DEPT NAME']  || '';
+            status.className = 'lookup-status success';
+            status.textContent = `✅ Found: ${fullName} — ${job['JOB TITLE'] || ''} — ${job['DEPT NAME'] || ''}`;
+          } else {
+            // fallback — use position control if job lookup fails
+            document.getElementById('inp_department').value = emp['POSITION CONTROL'] || '';
+            status.className = 'lookup-status success';
+            status.textContent = `✅ Found: ${fullName}`;
+          }
+        } else {
+          document.getElementById('inp_department').value = emp['POSITION CONTROL'] || '';
+          status.className = 'lookup-status success';
+          status.textContent = `✅ Found: ${fullName}`;
+        }
+
+        employeeLookupDone = true;
+        document.getElementById('err_employee_id').classList.remove('visible');
+      } else {
+        resetEmployeeFields();
+        status.className = 'lookup-status error';
+        status.textContent = '❌ No employee found with that ID. Please check and try again.';
+        employeeLookupDone = false;
+      }
+    } catch (err) {
+      status.className = 'lookup-status error';
+      status.textContent = '❌ Could not connect to the roster. Please try again.';
+      employeeLookupDone = false;
+    }
+  }
+
+  function resetEmployeeFields() {
+    ['inp_employee_name','inp_job_title','inp_department'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    const status = document.getElementById('emp-lookup-status');
+    status.className = 'lookup-status';
+    status.textContent = '';
+    employeeLookupDone = false;
+  }
+
+  // ── Incident search ─────────────────────────────────────
+  let searchTimer = null;
+  function searchIncidents(query) {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => fetchIncidents(query), 500);
+  }
+
+  async function fetchIncidents(query) {
+    const container = document.getElementById('incident-results');
+    container.innerHTML = '<div class="no-results">Searching...</div>';
+
+    try {
+      let filter = '';
+      if (query.trim()) {
+        filter = `&filter=[Outcome] contains "${encodeURIComponent(query)}"`;
+      }
+
+      const url = `/.netlify/functions/teamdesk-proxy?` +
+        `table=Just%20Culture%20Forms&` +
+        `field=ID&field=Outcome&field=NameOfLeader&field=Date` +
+        (filter ? filter : '') +
+        `&sortby=Date&sortorder=desc&top=10`;
+
+      const resp = await fetch(url);
+      const raw  = await resp.json();
+      console.log('Incident search raw response:', raw);
+
+      // TeamDesk sometimes returns an object with error, or a direct array
+      const data = Array.isArray(raw) ? raw : (raw.data || raw.records || []);
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<div class="no-results">No records found. Try a different search or leave blank to show all.</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      data.forEach(rec => {
+        const div = document.createElement('div');
+        div.className = 'incident-option';
+        div.dataset.id = rec['ID'];
+        div.dataset.outcome = rec['Outcome'] || '';
+        div.innerHTML = `
+          <div class="inc-outcome">📋 ${rec['Outcome'] || 'No outcome recorded'}</div>
+          <div class="inc-meta">Leader: ${rec['NameOfLeader'] || rec['Name of Leader'] || '—'} &nbsp;|&nbsp; Date: ${rec['Date'] || '—'} &nbsp;|&nbsp; Record #${rec['ID'] || rec['@row.id']}</div>
+        `;
+        div.onclick = () => selectIncident(div, rec);
+        container.appendChild(div);
+      });
+    } catch(e) {
+      container.innerHTML = `<div class="no-results">Could not load records. Error: ${e.message}</div>`;
+    }
+  }
+
+  function selectIncident(el, rec) {
+    document.querySelectorAll('.incident-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedIncident = rec;
+    document.getElementById('err_incident').classList.remove('visible');
+
+    // Pre-fill outcomes from Attachment A
+    const outcome = (rec['Outcome'] || '').toLowerCase();
+    document.getElementById('chk_system').checked  = outcome.includes('system flaw');
+    document.getElementById('chk_human').checked   = outcome.includes('human error');
+    document.getElementById('chk_atrisk').checked  = outcome.includes('at-risk');
+    document.getElementById('chk_reckless').checked= outcome.includes('reckless');
+
+    // Store the record ID as the link
+    document.getElementById('h_jcform_link').value = rec['ID'];
+  }
+
+  // ── HR escalation toggle ────────────────────────────────
+  function setHR(yes) {
+    hrNotified = yes;
+    document.getElementById('hr-yes').className = yes ? 'yn-btn selected-yes' : 'yn-btn';
+    document.getElementById('hr-no').className  = yes ? 'yn-btn' : 'yn-btn selected-no';
+    document.getElementById('hr-fields').className = yes ? 'hr-fields visible' : 'hr-fields';
+    document.getElementById('err_hr').classList.remove('visible');
+  }
+
+  // ── Final submit ────────────────────────────────────────
+  function submitForm() {
+    // Write all field values to hidden inputs
+    const fmt = (id) => document.getElementById(id)?.value?.trim() || '';
+    const fmtDate = (id) => {
+      const v = fmt(id);
+      if (!v) return '';
+      const [y,m,d] = v.split('-');
+      return `${m}/${d}/${y}`;
+    };
+
+    document.getElementById('h_employee_id').value    = fmt('inp_employee_id');
+    document.getElementById('h_employee_name').value  = fmt('inp_employee_name');
+    document.getElementById('h_job_title').value      = fmt('inp_job_title');
+    document.getElementById('h_department').value     = fmt('inp_department');
+    document.getElementById('h_date_of_event').value  = fmtDate('inp_date_of_event');
+    document.getElementById('h_leader_name').value    = fmt('inp_leader_name');
+    document.getElementById('h_leader_title').value   = fmt('inp_leader_title');
+    document.getElementById('h_action_behavior').value= fmt('inp_action_behavior');
+    document.getElementById('h_employee_action').value= fmt('inp_employee_action');
+    document.getElementById('h_system_action').value  = fmt('inp_system_action');
+    document.getElementById('h_followup_date').value  = fmtDate('inp_followup_date');
+    document.getElementById('h_followup_owner').value = fmt('inp_followup_owner');
+    document.getElementById('h_hr_escalation').value  = hrNotified ? '1' : '0';
+    document.getElementById('h_hr_contact').value     = fmt('inp_hr_contact');
+    document.getElementById('h_hr_date').value        = fmtDate('inp_hr_date');
+
+    // Outcome checkboxes
+    document.getElementById('h_outcome_system').value  = document.getElementById('chk_system').checked  ? '1' : '';
+    document.getElementById('h_outcome_human').value   = document.getElementById('chk_human').checked   ? '1' : '';
+    document.getElementById('h_outcome_atrisk').value  = document.getElementById('chk_atrisk').checked  ? '1' : '';
+    document.getElementById('h_outcome_reckless').value= document.getElementById('chk_reckless').checked? '1' : '';
+
+    document.querySelector('form[name="frm"]').submit();
+  }
+
+  // ── Init ────────────────────────────────────────────────
+  updateProgress(1);
+
+  // Load all incidents on step 2 when it becomes active
+  const origGoToStep = goToStep;
+</script>
+
+</body>
+</html>
