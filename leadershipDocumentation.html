@@ -695,7 +695,7 @@
     status.textContent = 'Looking up employee...';
 
     try {
-      const url = `/.netlify/functions/teamdesk-proxy?` +
+      const url = `https://just-culture.quinteroalberto88.workers.dev?` +
         `table=${ROSTER_TABLE}&` +
         `filter=[EMPLOYEE ID] = ${encodeURIComponent(empId)}&` +
         `field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME&field=POSITION CONTROL&field=JOB CODE (Reference)`;
@@ -717,7 +717,7 @@
 
         // Second lookup — get JOB TITLE and DEPT NAME using row ID
         if (jobRowId) {
-          const jobUrl = `/.netlify/functions/teamdesk-proxy?` +
+          const jobUrl = `https://just-culture.quinteroalberto88.workers.dev?` +
             `table=JOB%20TITLE&` +
             `filter=[Id]="${encodeURIComponent(jobRowId)}"&` +
             `field=JOB TITLE&field=DEPT NAME&field=DEPT CODE`;
@@ -783,7 +783,7 @@
         filter = `&filter=[Outcome]="${encodeURIComponent(query.trim())}"`;
       }
 
-      const url = `/.netlify/functions/teamdesk-proxy?` +
+      const url = `https://just-culture.quinteroalberto88.workers.dev?` +
         `table=Just%20Culture%20Form&` +
         `field=ID&field=Outcome&field=NameOfLeader&field=Date` +
         filter +
