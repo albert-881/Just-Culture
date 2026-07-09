@@ -307,7 +307,7 @@
     <div class="step active" id="step-1">
       <div class="step-label">Step 1 of 7</div>
       <div class="step-title">Event &amp; Employee Information</div>
-      <div class="step-subtitle">Enter the employee's ID number to auto-fill their information from the roster.</div>
+      <div class="step-subtitle">Enter the employee's ID and your leader ID to auto-fill information from the roster.</div>
 
       <div class="field-group">
         <label for="inp_employee_id">Employee ID <span class="required">*</span></label>
@@ -338,16 +338,21 @@
         <div class="field-error" id="err_date_of_event">Please enter the date of the event.</div>
       </div>
 
+      <div class="field-group">
+        <label for="inp_leader_id">Leader ID <span class="required">*</span></label>
+        <input type="text" id="inp_leader_id" placeholder="Enter your Employee ID number">
+        <div class="lookup-status" id="leader-lookup-status"></div>
+        <div class="field-error" id="err_leader_id">Please enter a valid Leader ID.</div>
+      </div>
+
       <div class="field-row">
         <div class="field-group">
-          <label for="inp_leader_name">Leader Name <span class="required">*</span></label>
-          <input type="text" id="inp_leader_name" placeholder="Enter your name">
-          <div class="field-error" id="err_leader_name">Please enter the leader's name.</div>
+          <label>Leader Name</label>
+          <input type="text" id="inp_leader_name" placeholder="Auto-filled" readonly class="autofilled">
         </div>
         <div class="field-group">
-          <label for="inp_leader_title">Leader Title <span class="required">*</span></label>
-          <input type="text" id="inp_leader_title" placeholder="Enter your title">
-          <div class="field-error" id="err_leader_title">Please enter the leader's title.</div>
+          <label>Leader Title</label>
+          <input type="text" id="inp_leader_title" placeholder="Auto-filled" readonly class="autofilled">
         </div>
       </div>
 
@@ -643,8 +648,10 @@
         valid = false;
       }
       require('inp_date_of_event', 'err_date_of_event');
-      require('inp_leader_name',   'err_leader_name');
-      require('inp_leader_title',  'err_leader_title');
+      if (!leaderLookupDone) {
+        document.getElementById('err_leader_id').classList.add('visible');
+        valid = false;
+      }
     }
 
     if (step === 2) {
@@ -675,6 +682,79 @@
     }
 
     return valid;
+  }
+
+  // ── Leader ID lookup ────────────────────────────────────
+  let leaderLookupTimer = null;
+  let leaderLookupDone  = false;
+
+  document.getElementById('inp_leader_id').addEventListener('input', function() {
+    clearTimeout(leaderLookupTimer);
+    const val = this.value.trim();
+    if (!val) { resetLeaderFields(); return; }
+    leaderLookupTimer = setTimeout(() => lookupLeader(val), 600);
+  });
+
+  async function lookupLeader(empId) {
+    const status = document.getElementById('leader-lookup-status');
+    status.className = 'lookup-status loading';
+    status.textContent = 'Looking up leader...';
+
+    try {
+      const url = `https://just-culture.quinteroalberto88.workers.dev?` +
+        `table=${ROSTER_TABLE}&` +
+        `filter=[EMPLOYEE ID] = ${encodeURIComponent(empId)}&` +
+        `field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME&field=JOB CODE (Reference)`;
+
+      const resp = await fetch(url);
+      const data = await resp.json();
+
+      if (data && Array.isArray(data) && data.length > 0) {
+        const emp      = data[0];
+        const firstName = emp['FIRST NAME'] || '';
+        const lastName  = emp['LAST NAME']  || '';
+        const fullName  = `${firstName} ${lastName}`.trim();
+        const jobRowId  = emp['JOB CODE (Reference)'] || '';
+
+        document.getElementById('inp_leader_name').value = fullName;
+        status.className = 'lookup-status loading';
+        status.textContent = `Found ${fullName} — loading title...`;
+
+        if (jobRowId) {
+          const jobUrl = `https://just-culture.quinteroalberto88.workers.dev?` +
+            `table=JOB%20TITLE&filter=[Id]="${encodeURIComponent(jobRowId)}"&field=JOB TITLE`;
+          const jobResp = await fetch(jobUrl);
+          const jobData = await jobResp.json();
+
+          if (jobData && Array.isArray(jobData) && jobData.length > 0) {
+            document.getElementById('inp_leader_title').value = jobData[0]['JOB TITLE'] || '';
+          }
+        }
+
+        status.className = 'lookup-status success';
+        status.textContent = `✅ Found: ${fullName} — ${document.getElementById('inp_leader_title').value}`;
+        leaderLookupDone = true;
+        document.getElementById('err_leader_id').classList.remove('visible');
+      } else {
+        resetLeaderFields();
+        status.className = 'lookup-status error';
+        status.textContent = '❌ No leader found with that ID. Please check and try again.';
+        leaderLookupDone = false;
+      }
+    } catch (err) {
+      status.className = 'lookup-status error';
+      status.textContent = '❌ Could not connect to the roster. Please try again.';
+      leaderLookupDone = false;
+    }
+  }
+
+  function resetLeaderFields() {
+    document.getElementById('inp_leader_name').value  = '';
+    document.getElementById('inp_leader_title').value = '';
+    const status = document.getElementById('leader-lookup-status');
+    status.className = 'lookup-status';
+    status.textContent = '';
+    leaderLookupDone = false;
   }
 
   // ── Employee lookup via TeamDesk API ────────────────────
