@@ -37,22 +37,11 @@
       padding: 40px 16px 80px;
     }
 
-    /* ── Header ── */
     .form-header {
       text-align: center;
       max-width: 620px;
       margin-bottom: 40px;
     }
-
-    .form-header .eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 10px;
-    }
-
     .form-header h1 {
       font-family: 'DM Serif Display', serif;
       font-size: 2.4rem;
@@ -60,7 +49,6 @@
       margin-bottom: 14px;
       line-height: 1.15;
     }
-
     .form-header p {
       font-size: 0.95rem;
       color: var(--muted);
@@ -69,7 +57,6 @@
       margin: 0 auto;
     }
 
-    /* ── Card ── */
     .card {
       background: var(--white);
       border: 1px solid var(--border);
@@ -80,11 +67,7 @@
       box-shadow: 0 4px 24px rgba(27,42,74,0.08);
     }
 
-    /* ── Progress ── */
-    .progress-wrap {
-      margin-bottom: 32px;
-    }
-
+    .progress-wrap { margin-bottom: 32px; }
     .progress-label {
       font-size: 0.78rem;
       font-weight: 500;
@@ -93,22 +76,9 @@
       display: flex;
       justify-content: space-between;
     }
+    .progress-bar-bg { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s ease; }
 
-    .progress-bar-bg {
-      height: 4px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-
-    /* ── Question ── */
     .question-block { display: none; }
     .question-block.active { display: block; }
 
@@ -120,7 +90,6 @@
       color: var(--accent);
       margin-bottom: 10px;
     }
-
     .question-text {
       font-size: 1.15rem;
       font-weight: 500;
@@ -129,12 +98,7 @@
       margin-bottom: 28px;
     }
 
-    /* ── Answer buttons ── */
-    .answer-group {
-      display: flex;
-      gap: 12px;
-    }
-
+    .answer-group { display: flex; gap: 12px; }
     .answer-btn {
       flex: 1;
       padding: 14px 20px;
@@ -148,20 +112,9 @@
       cursor: pointer;
       transition: all 0.18s ease;
     }
+    .answer-btn:hover { border-color: var(--accent); background: #EBF3FA; color: var(--accent); }
+    .answer-btn.selected { border-color: var(--accent); background: var(--accent); color: var(--white); }
 
-    .answer-btn:hover {
-      border-color: var(--accent);
-      background: #EBF3FA;
-      color: var(--accent);
-    }
-
-    .answer-btn.selected {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: var(--white);
-    }
-
-    /* ── Navigation ── */
     .nav-row {
       display: flex;
       justify-content: space-between;
@@ -170,7 +123,6 @@
       padding-top: 24px;
       border-top: 1px solid var(--border);
     }
-
     .btn-back {
       background: none;
       border: none;
@@ -185,14 +137,11 @@
       gap: 6px;
       transition: color 0.15s;
     }
-
     .btn-back:hover { color: var(--navy); }
     .btn-back:disabled { opacity: 0.3; cursor: default; }
 
-    /* ── Outcome screen ── */
     .outcome-screen { display: none; }
     .outcome-screen.active { display: block; }
-
     .outcome-title {
       font-size: 0.72rem;
       font-weight: 600;
@@ -201,14 +150,7 @@
       color: var(--muted);
       margin-bottom: 16px;
     }
-
-    .outcome-badges {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-
+    .outcome-badges { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
     .outcome-badge {
       display: inline-flex;
       align-items: center;
@@ -219,7 +161,6 @@
       font-weight: 600;
       border-left: 4px solid;
     }
-
     .outcome-badge.system  { background:#EBF3FA; color:var(--outcome-system);  border-color:var(--outcome-system); }
     .outcome-badge.human   { background:#E8F5EF; color:var(--outcome-human);   border-color:var(--outcome-human); }
     .outcome-badge.atrisk  { background:#FDF8E7; color:var(--outcome-atrisk);  border-color:var(--outcome-atrisk); }
@@ -250,13 +191,10 @@
       letter-spacing: 0.02em;
       transition: background 0.18s;
     }
-
     .btn-submit:hover { background: var(--steel); }
 
-    /* ── Final step screen ── */
     .final-screen { display: none; }
     .final-screen.active { display: block; }
-
     .final-title {
       font-size: 0.72rem;
       font-weight: 600;
@@ -265,25 +203,19 @@
       color: var(--muted);
       margin-bottom: 6px;
     }
-
     .final-heading {
       font-family: 'DM Serif Display', serif;
       font-size: 1.4rem;
       color: var(--navy);
       margin-bottom: 6px;
     }
-
     .final-subtext {
       font-size: 0.88rem;
       color: var(--muted);
       margin-bottom: 28px;
       line-height: 1.6;
     }
-
-    .final-field {
-      margin-bottom: 20px;
-    }
-
+    .final-field { margin-bottom: 20px; }
     .final-field label {
       display: block;
       font-size: 0.82rem;
@@ -292,7 +224,6 @@
       margin-bottom: 7px;
       letter-spacing: 0.02em;
     }
-
     .final-field input {
       width: 100%;
       padding: 12px 14px;
@@ -305,48 +236,36 @@
       transition: border-color 0.18s;
       outline: none;
     }
-
-    .final-field input:focus {
+    .final-field input:focus { border-color: var(--accent); }
+    .final-field input.error { border-color: var(--outcome-reckless); }
+    .final-field input.autofilled {
+      background: #EBF3FA;
       border-color: var(--accent);
+      color: var(--steel);
+      font-weight: 500;
     }
 
-    .final-field input.error {
-      border-color: var(--outcome-reckless);
-    }
-
-    .field-error {
-      font-size: 0.78rem;
-      color: var(--outcome-reckless);
-      margin-top: 5px;
-      display: none;
-    }
-
+    .field-error { font-size: 0.78rem; color: var(--outcome-reckless); margin-top: 5px; display: none; }
     .field-error.visible { display: block; }
 
-    /* ── Stop screen ── */
+    .lookup-status {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: none;
+    }
+    .lookup-status.success { background: #E8F5EF; color: var(--outcome-human); border: 1px solid #A8D5BE; display: block; }
+    .lookup-status.error   { background: #FBEAEC; color: var(--outcome-reckless); border: 1px solid #E8A0AA; display: block; }
+    .lookup-status.loading { background: #EBF3FA; color: var(--accent); border: 1px solid var(--border); display: block; }
+
     .stop-screen { display: none; }
     .stop-screen.active { display: block; }
+    .stop-icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .stop-heading { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 10px; }
+    .stop-message { font-size: 0.95rem; color: var(--muted); line-height: 1.65; margin-bottom: 28px; }
 
-    .stop-icon {
-      font-size: 2.4rem;
-      margin-bottom: 12px;
-    }
-
-    .stop-heading {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.5rem;
-      color: var(--navy);
-      margin-bottom: 10px;
-    }
-
-    .stop-message {
-      font-size: 0.95rem;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 28px;
-    }
-
-    /* Hidden fields for TeamDesk */
     .hidden-fields { display: none; }
 
     @media (max-width: 480px) {
@@ -358,18 +277,14 @@
 </head>
 <body>
 
-  <!-- Header -->
   <div class="form-header">
-    
     <h1>Just Culture Algorithm</h1>
     <p>Answer each question honestly. You will be guided through based on your responses. Only one question is shown at a time.</p>
   </div>
 
-  <!-- Main form posts to TeamDesk -->
   <form name="frm" method="post" action="https://truebooks.teamdesk.net/secure/gateway.aspx?action=WebToRecord&app=93348&table=1726300">
     <input type="hidden" name="retURL" value="https://albert-881.github.io/Just-Culture/">
 
-    <!-- Hidden answer fields (sent to TeamDesk) -->
     <div class="hidden-fields">
       <input type="hidden" name="f_75820593" id="ans_q1">
       <input type="hidden" name="f_75820594" id="ans_q2">
@@ -392,7 +307,6 @@
 
     <div class="card">
 
-      <!-- Progress bar -->
       <div class="progress-wrap">
         <div class="progress-label">
           <span id="progress-text">Question 1</span>
@@ -403,8 +317,6 @@
         </div>
       </div>
 
-      <!-- ── Questions ── -->
-
       <div class="question-block active" id="block-q1">
         <div class="question-label">Question 1</div>
         <div class="question-text">Was there a policy or process to manage this risk?</div>
@@ -412,9 +324,7 @@
           <button type="button" class="answer-btn" onclick="answer('q1','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q1','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()" disabled>← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()" disabled>← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q2">
@@ -424,9 +334,7 @@
           <button type="button" class="answer-btn" onclick="answer('q2','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q2','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q3">
@@ -436,9 +344,7 @@
           <button type="button" class="answer-btn" onclick="answer('q3','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q3','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q4">
@@ -448,9 +354,7 @@
           <button type="button" class="answer-btn" onclick="answer('q4','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q4','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q5">
@@ -460,9 +364,7 @@
           <button type="button" class="answer-btn" onclick="answer('q5','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q5','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q6">
@@ -472,9 +374,7 @@
           <button type="button" class="answer-btn" onclick="answer('q6','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q6','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q7">
@@ -484,9 +384,7 @@
           <button type="button" class="answer-btn" onclick="answer('q7','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q7','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q8">
@@ -496,9 +394,7 @@
           <button type="button" class="answer-btn" onclick="answer('q8','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q8','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q9">
@@ -508,9 +404,7 @@
           <button type="button" class="answer-btn" onclick="answer('q9','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q9','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q10">
@@ -520,9 +414,7 @@
           <button type="button" class="answer-btn" onclick="answer('q10','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q10','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q11">
@@ -532,9 +424,7 @@
           <button type="button" class="answer-btn" onclick="answer('q11','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q11','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q12">
@@ -544,9 +434,7 @@
           <button type="button" class="answer-btn" onclick="answer('q12','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q12','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q13">
@@ -556,9 +444,7 @@
           <button type="button" class="answer-btn" onclick="answer('q13','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q13','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
       <div class="question-block" id="block-q14">
@@ -568,47 +454,47 @@
           <button type="button" class="answer-btn" onclick="answer('q14','Yes')">Yes</button>
           <button type="button" class="answer-btn" onclick="answer('q14','No')">No</button>
         </div>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
-      <!-- ── Outcome Screen ── -->
+      <!-- Outcome Screen -->
       <div class="outcome-screen" id="outcome-screen">
         <div class="outcome-title">Algorithm Result</div>
         <div class="outcome-badges" id="outcome-badges"></div>
         <div class="outcome-note" id="outcome-note"></div>
         <button type="button" class="btn-submit" onclick="goToFinal('outcome')">Continue →</button>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
-      <!-- ── Stop Screen ── -->
+      <!-- Stop Screen -->
       <div class="stop-screen" id="stop-screen">
         <div class="stop-icon">✅</div>
         <div class="stop-heading" id="stop-heading">No Further Action Required</div>
         <div class="stop-message" id="stop-message"></div>
         <button type="button" class="btn-submit" onclick="goToFinal('stop')">Continue →</button>
-        <div class="nav-row">
-          <button type="button" class="btn-back" onclick="goBack()">← Back</button>
-        </div>
+        <div class="nav-row"><button type="button" class="btn-back" onclick="goBack()">← Back</button></div>
       </div>
 
-      <!-- ── Final Step Screen ── -->
+      <!-- Final Step Screen — now uses Leader ID lookup instead of typing name -->
       <div class="final-screen" id="final-screen">
         <div class="final-title">Final Step</div>
-        <div class="final-heading">Leader Information</div>
-        <div class="final-subtext">Please enter your name and today's date before submitting.</div>
+        <div class="final-heading">Leader Sign-Off</div>
+        <div class="final-subtext">Enter your Employee ID to auto-fill your name, then confirm the date before submitting.</div>
 
         <div class="final-field">
-          <label for="input-leader-name">Name of Leader</label>
-          <input type="text" id="input-leader-name" placeholder="Enter full name" maxlength="40" oninput="clearError('name')">
-          <div class="field-error" id="error-name">Please enter the leader's name.</div>
+          <label for="input-leader-id">Leader Employee ID <span style="color:var(--outcome-reckless)">*</span></label>
+          <input type="text" id="input-leader-id" placeholder="Enter your Employee ID" oninput="onLeaderIdInput()">
+          <div class="lookup-status" id="leader-lookup-status"></div>
+          <div class="field-error" id="error-leader-id">Please enter a valid Leader Employee ID.</div>
         </div>
 
         <div class="final-field">
-          <label for="input-date">Date</label>
+          <label>Leader Name</label>
+          <input type="text" id="input-leader-name" placeholder="Auto-filled from ID" readonly class="autofilled">
+        </div>
+
+        <div class="final-field">
+          <label for="input-date">Date <span style="color:var(--outcome-reckless)">*</span></label>
           <input type="date" id="input-date" oninput="clearError('date')">
           <div class="field-error" id="error-date">Please select a date.</div>
         </div>
@@ -623,14 +509,16 @@
   </form>
 
   <script>
-    // ── State ──────────────────────────────────────────────
-    const answers  = {};        // { q1: 'Yes', q2: 'No', ... }
-    const history  = [];        // stack of screens visited
-    const outcomes = new Set(); // accumulated outcome labels
-    let   current  = 'q1';     // current question id
+    const WORKER_URL = 'https://just-culture.quinteroalberto88.workers.dev';
 
-    // ── Branching map ──────────────────────────────────────
-    // Each question returns { next, addOutcome } based on the answer
+    const answers  = {};
+    const history  = [];
+    const outcomes = new Set();
+    let   current  = 'q1';
+
+    let leaderLookupDone = false;
+    let leaderTimer      = null;
+
     function getNext(q, ans) {
       switch(q) {
         case 'q1':  return ans === 'Yes' ? { next:'q2' }  : { next:'q3' };
@@ -671,49 +559,31 @@
       }
     }
 
-    // ── Answer handler ─────────────────────────────────────
     function answer(q, val) {
-      // Save answer to state and hidden field
       answers[q] = val;
       const field = document.getElementById('ans_' + q);
       if (field) field.value = val;
-
-      // Highlight selected button
       const block = document.getElementById('block-' + q);
       block.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
       block.querySelectorAll('.answer-btn').forEach(b => {
         if (b.textContent.trim() === val) b.classList.add('selected');
       });
-
-      // Short delay so selection is visible before transition
       setTimeout(() => {
         const result = getNext(q, val);
-
-        // Accumulate outcome if any
         if (result.addOutcome) outcomes.add(result.addOutcome);
-
-        // Push current to history
         history.push(current);
         current = result.next;
-
-        if (result.next === 'outcome') {
-          showOutcome();
-        } else if (result.next === 'stop') {
-          showStop(result.stopHeading, result.stopMsg);
-        } else {
-          showQuestion(result.next);
-        }
+        if (result.next === 'outcome') showOutcome();
+        else if (result.next === 'stop') showStop(result.stopHeading, result.stopMsg);
+        else showQuestion(result.next);
       }, 180);
     }
 
-    // ── Show a question ────────────────────────────────────
     function showQuestion(q) {
       hideAll();
       const block = document.getElementById('block-' + q);
       block.classList.add('active');
       current = q;
-
-      // Restore previously selected answer if user went back
       if (answers[q]) {
         block.querySelectorAll('.answer-btn').forEach(b => {
           b.classList.toggle('selected', b.textContent.trim() === answers[q]);
@@ -721,18 +591,13 @@
       } else {
         block.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
       }
-
       updateProgress(q);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ── Show outcome ───────────────────────────────────────
     function showOutcome() {
       hideAll();
-      const screen = document.getElementById('outcome-screen');
-      screen.classList.add('active');
-
-      // Build outcome badges
+      document.getElementById('outcome-screen').classList.add('active');
       const badgesEl = document.getElementById('outcome-badges');
       badgesEl.innerHTML = '';
       outcomes.forEach(o => {
@@ -741,70 +606,40 @@
         badge.textContent = o;
         badgesEl.appendChild(badge);
       });
-
-      // Write combined outcome to hidden TeamDesk field
       document.getElementById('outcome_field').value = [...outcomes].join('; ');
-
-      // Note
-      document.getElementById('outcome-note').textContent =
-        'Review the result(s) above. Click "Continue" to finalize.';
-
+      document.getElementById('outcome-note').textContent = 'Review the result(s) above. Click "Continue" to finalize.';
       updateProgress('outcome');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ── Show stop ──────────────────────────────────────────
     function showStop(heading, msg) {
       hideAll();
-      const screen = document.getElementById('stop-screen');
-      screen.classList.add('active');
+      document.getElementById('stop-screen').classList.add('active');
       document.getElementById('stop-heading').textContent = heading;
       document.getElementById('stop-message').textContent = msg;
-
-      // Write any accumulated outcomes (e.g. System Flaw only) to field
-      document.getElementById('outcome_field').value =
-        outcomes.size > 0 ? [...outcomes].join('; ') : 'No Further Action';
-
+      document.getElementById('outcome_field').value = outcomes.size > 0 ? [...outcomes].join('; ') : 'No Further Action';
       updateProgress('stop');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ── Go back ────────────────────────────────────────────
     function goBack() {
       if (history.length === 0) return;
-
-      // If going back from outcome/stop, don't remove the last outcome
-      // (outcomes are rebuilt from answers on forward traversal anyway)
       const prev = history.pop();
-
-      // Remove the answer for current question so it resets
       if (current !== 'outcome' && current !== 'stop') {
         delete answers[current];
         const field = document.getElementById('ans_' + current);
         if (field) field.value = '';
       }
-
-      // Recalculate outcomes from scratch based on remaining answers
       recalcOutcomes();
-
       current = prev;
-      if (prev === 'outcome') {
-        showOutcome();
-      } else if (prev === 'stop') {
-        // Can't really go back to stop cleanly, just go to previous question
-        const realPrev = history.pop();
-        current = realPrev;
-        showQuestion(realPrev);
-      } else {
-        showQuestion(prev);
-      }
+      if (prev === 'outcome') showOutcome();
+      else if (prev === 'stop') { const realPrev = history.pop(); current = realPrev; showQuestion(realPrev); }
+      else showQuestion(prev);
     }
 
-    // Recalculate outcomes set from scratch by replaying answered questions
     function recalcOutcomes() {
       outcomes.clear();
-      const questionOrder = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14'];
-      questionOrder.forEach(q => {
+      ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14'].forEach(q => {
         if (answers[q]) {
           const result = getNext(q, answers[q]);
           if (result.addOutcome) outcomes.add(result.addOutcome);
@@ -812,14 +647,12 @@
       });
     }
 
-    // ── Final step ─────────────────────────────────────────
-    let preFinalScreen = 'outcome'; // tracks which screen to go back to
+    let preFinalScreen = 'outcome';
 
     function goToFinal(from) {
       preFinalScreen = from;
       hideAll();
       document.getElementById('final-screen').classList.add('active');
-      // Pre-fill today's date
       const today = new Date().toISOString().split('T')[0];
       const dateInput = document.getElementById('input-date');
       if (!dateInput.value) dateInput.value = today;
@@ -838,14 +671,60 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ── Leader ID lookup ────────────────────────────────
+    function onLeaderIdInput() {
+      clearTimeout(leaderTimer);
+      const val = document.getElementById('input-leader-id').value.trim();
+      if (!val) { resetLeaderFields(); return; }
+      leaderTimer = setTimeout(() => lookupLeader(val), 600);
+    }
+
+    async function lookupLeader(empId) {
+      const status = document.getElementById('leader-lookup-status');
+      status.className = 'lookup-status loading';
+      status.textContent = 'Looking up leader...';
+      try {
+        const url = `${WORKER_URL}?table=ROSTER&filter=[EMPLOYEE ID] = ${encodeURIComponent(empId)}&field=EMPLOYEE ID&field=FIRST NAME&field=LAST NAME`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        if (data && Array.isArray(data) && data.length > 0) {
+          const emp = data[0];
+          const fullName = `${emp['FIRST NAME'] || ''} ${emp['LAST NAME'] || ''}`.trim();
+          document.getElementById('input-leader-name').value = fullName;
+          status.className = 'lookup-status success';
+          status.textContent = `✅ Found: ${fullName}`;
+          leaderLookupDone = true;
+          document.getElementById('error-leader-id').classList.remove('visible');
+          document.getElementById('input-leader-id').classList.remove('error');
+        } else {
+          resetLeaderFields();
+          status.className = 'lookup-status error';
+          status.textContent = '❌ No leader found with that ID. Please check and try again.';
+          leaderLookupDone = false;
+        }
+      } catch (e) {
+        status.className = 'lookup-status error';
+        status.textContent = '❌ Could not connect. Please try again.';
+        leaderLookupDone = false;
+      }
+    }
+
+    function resetLeaderFields() {
+      document.getElementById('input-leader-name').value = '';
+      const status = document.getElementById('leader-lookup-status');
+      status.className = 'lookup-status';
+      status.textContent = '';
+      leaderLookupDone = false;
+    }
+
     function submitFinal() {
       const name = document.getElementById('input-leader-name').value.trim();
       const date = document.getElementById('input-date').value.trim();
       let valid = true;
 
-      if (!name) {
-        document.getElementById('input-leader-name').classList.add('error');
-        document.getElementById('error-name').classList.add('visible');
+      if (!leaderLookupDone) {
+        document.getElementById('input-leader-id').classList.add('error');
+        document.getElementById('error-leader-id').classList.add('visible');
         valid = false;
       }
       if (!date) {
@@ -855,27 +734,19 @@
       }
       if (!valid) return;
 
-      // Write values to hidden TeamDesk fields
       document.getElementById('leader_name_field').value = name;
-      // Format date as MM/DD/YYYY for TeamDesk
       const [y, m, d] = date.split('-');
       document.getElementById('date_field').value = m + '/' + d + '/' + y;
-
-      // Submit the form
       document.querySelector('form[name="frm"]').submit();
     }
 
     function clearError(field) {
-      if (field === 'name') {
-        document.getElementById('input-leader-name').classList.remove('error');
-        document.getElementById('error-name').classList.remove('visible');
-      } else {
+      if (field === 'date') {
         document.getElementById('input-date').classList.remove('error');
         document.getElementById('error-date').classList.remove('visible');
       }
     }
 
-    // ── Helpers ────────────────────────────────────────────
     function hideAll() {
       document.querySelectorAll('.question-block, .outcome-screen, .stop-screen, .final-screen')
         .forEach(el => el.classList.remove('active'));
@@ -904,7 +775,6 @@
       document.getElementById('progress-pct').textContent = pct + '%';
     }
 
-    // Init
     updateProgress('q1');
   </script>
 
