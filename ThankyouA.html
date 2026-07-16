@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submission Complete — Just Culture Algorithm</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #1B2A4A; --steel: #2E4A7A; --accent: #4A90C4;
+      --soft-bg: #F0F4F9; --white: #FFFFFF; --border: #D0DCE8;
+      --muted: #6B7E99; --success: #2E7D5B;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--soft-bg);
+      color: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 52px 48px;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 4px 24px rgba(27,42,74,0.08);
+      text-align: center;
+    }
+    .check-circle {
+      width: 72px; height: 72px;
+      background: #E8F5EF;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 2rem;
+    }
+    .heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.9rem;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .subtext {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .steps {
+      text-align: left;
+      background: var(--soft-bg);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+    }
+    .steps-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 16px;
+    }
+    .step-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .step-item:last-child { margin-bottom: 0; }
+    .step-num {
+      background: var(--accent);
+      color: var(--white);
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-text {
+      font-size: 0.875rem;
+      color: var(--navy);
+      line-height: 1.6;
+    }
+    .step-text strong { font-weight: 600; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0 0 28px; }
+    .btn-group { display: flex; flex-direction: column; gap: 10px; }
+    .btn-primary {
+      display: block; padding: 14px;
+      background: var(--navy); color: var(--white);
+      border: none; border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      text-decoration: none; transition: background 0.18s;
+    }
+    .btn-primary:hover { background: var(--steel); }
+    .btn-secondary {
+      display: block; padding: 13px;
+      background: var(--white); color: var(--navy);
+      border: 2px solid var(--border); border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem; font-weight: 500;
+      text-decoration: none; transition: all 0.18s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .footer-note {
+      margin-top: 28px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="check-circle">✅</div>
+    <div class="heading">Submission Complete</div>
+    <div class="subtext">
+      Attachment A has been submitted successfully.
+      Thank you for completing this review.
+    </div>
+
+    <div class="steps">
+      <div class="steps-title">Next Step</div>
+      
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text">If employee accountability applies, complete <strong>Attachment B — Leadership Documentation</strong> and link it to this Attachment A.</div>
+      </div>
+      
+      
+    </div>
+
+    <hr class="divider">
+
+    <div class="btn-group">
+      <a href="leadershipDocumentation.html" class="btn-primary">Continue to Attachment B →</a>
+      <a href="index.html" class="btn-secondary">Start a New Attachment A</a>
+    </div>
+
+    <div class="footer-note">
+      Harlingen Medical Center &nbsp;·&nbsp; Just Culture Program &nbsp;·&nbsp; Confidential
+    </div>
+  </div>
+</body>
+</html>
