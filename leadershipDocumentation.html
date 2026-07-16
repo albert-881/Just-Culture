@@ -893,7 +893,7 @@
         div.dataset.outcome = rec['Outcome'] || '';
         div.innerHTML = `
           <div class="inc-outcome">📋 ${rec['Outcome'] || 'No outcome recorded'}</div>
-          <div class="inc-meta">Leader: ${rec['NameOfLeader'] || '—'} &nbsp;|&nbsp; Date: ${rec['Date'] ? rec['Date'].split('T')[0] : '—'} &nbsp;|&nbsp; Record #${rec['ID'] || rec['@row.id']}</div>
+          <div class="inc-meta">Leader: ${rec['NameOfLeader'] || '—'} &nbsp;|&nbsp; Date: ${rec['Date'] ? rec['Date'].split('T')[0] : '—'}</div>
         `;
         div.onclick = () => selectIncident(div, rec);
         container.appendChild(div);
