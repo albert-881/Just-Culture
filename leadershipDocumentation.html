@@ -918,6 +918,10 @@
 
     // Store the record ID as the link
     document.getElementById('h_jcform_link').value = rec['Id'];
+    // Auto-set HR escalation based on outcome
+    const outcomeText = (rec['Outcome'] || '').toLowerCase();
+    const requiresHR = outcomeText.includes('reckless');
+    setHR(requiresHR);
   }
 
   // ── HR escalation toggle ────────────────────────────────
