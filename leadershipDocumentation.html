@@ -526,11 +526,11 @@
         <div class="field-row">
           <div class="field-group">
             <label for="inp_hr_contact">HR Contact Name</label>
-            <input type="text" id="inp_hr_contact" placeholder="HR representative name">
+            <input type="text" id="inp_hr_contact" value="ABIGAIL MARTINEZ" readonly class="autofilled">
           </div>
           <div class="field-group">
             <label for="inp_hr_date">HR Notification Date</label>
-            <input type="date" id="inp_hr_date">
+            <input type="date" id="inp_hr_date" readonly class="autofilled">
           </div>
         </div>
       </div>
@@ -927,6 +927,9 @@
   // ── HR escalation toggle ────────────────────────────────
   function setHR(yes) {
     hrNotified = yes;
+    if (yes) {
+    document.getElementById('inp_hr_date').value = new Date().toISOString().split('T')[0];
+  }
     document.getElementById('hr-yes').className = yes ? 'yn-btn selected-yes' : 'yn-btn';
     document.getElementById('hr-no').className  = yes ? 'yn-btn' : 'yn-btn selected-no';
     document.getElementById('hr-fields').className = yes ? 'hr-fields visible' : 'hr-fields';
