@@ -289,7 +289,6 @@
   <input type="hidden" name="f_75888729" id="h_hr_contact">
   <input type="hidden" name="f_75888730" id="h_hr_date">
   <input type="hidden" name="f_76239569" id="h_jcform_link">
-  <input type="hidden" name="f_76315146" id="h_supervisor_email">
 
   <div class="card">
 
@@ -935,7 +934,7 @@
   }
 
   // ── Final submit ────────────────────────────────────────
-  async function submitForm() {
+  function submitForm() {
     // Write all field values to hidden inputs
     const fmt = (id) => document.getElementById(id)?.value?.trim() || '';
     const fmtDate = (id) => {
@@ -966,19 +965,7 @@
     document.getElementById('h_outcome_human').value   = document.getElementById('chk_human').checked   ? '1' : '';
     document.getElementById('h_outcome_atrisk').value  = document.getElementById('chk_atrisk').checked  ? '1' : '';
     document.getElementById('h_outcome_reckless').value= document.getElementById('chk_reckless').checked? '1' : '';
-    // Look up supervisor email from ROSTER via Worker
-    const leaderTitle = fmt('inp_leader_title');
-    try {
-      const resp = await fetch(
-        `https://just-culture.quinteroalberto88.workers.dev?action=supervisorEmail&leaderTitle=${encodeURIComponent(leaderTitle)}`
-      );
-      const result = await resp.json();
-      if (result.email) {
-        document.getElementById('h_supervisor_email').value = result.email;
-      }
-    } catch (e) {
-      console.warn('Could not look up supervisor email:', e);
-    }
+
     document.querySelector('form[name="frm"]').submit();
   }
 
