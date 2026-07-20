@@ -10,15 +10,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:    #1B2A4A;
-      --steel:   #2E4A7A;
-      --accent:  #4A90C4;
-      --soft-bg: #F0F4F9;
+      --navy:    #8E0C3A;
+      --steel:   #000000;
+      --accent:  #8E0C3A;
+      --soft-bg: #F5F5F5;
       --white:   #FFFFFF;
-      --border:  #D0DCE8;
-      --text:    #1B2A4A;
-      --muted:   #6B7E99;
-
+      --border:  #C8C8C8;
+      --text:    #000000;
+      --muted:   #888888;
       --outcome-system:  #2E6B9E;
       --outcome-human:   #2E7D5B;
       --outcome-atrisk:  #B8860B;
@@ -64,7 +63,7 @@
       padding: 40px 44px;
       width: 100%;
       max-width: 620px;
-      box-shadow: 0 4px 24px rgba(27,42,74,0.08);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     }
 
     .progress-wrap { margin-bottom: 32px; }
@@ -112,7 +111,7 @@
       cursor: pointer;
       transition: all 0.18s ease;
     }
-    .answer-btn:hover { border-color: var(--accent); background: #EBF3FA; color: var(--accent); }
+    .answer-btn:hover { border-color: var(--accent); background: #F2F2F2; color: var(--accent); }
     .answer-btn.selected { border-color: var(--accent); background: var(--accent); color: var(--white); }
 
     .nav-row {
@@ -239,7 +238,7 @@
     .final-field input:focus { border-color: var(--accent); }
     .final-field input.error { border-color: var(--outcome-reckless); }
     .final-field input.autofilled {
-      background: #EBF3FA;
+      background: #F2F2F2;
       border-color: var(--accent);
       color: var(--steel);
       font-weight: 500;
@@ -258,7 +257,7 @@
     }
     .lookup-status.success { background: #E8F5EF; color: var(--outcome-human); border: 1px solid #A8D5BE; display: block; }
     .lookup-status.error   { background: #FBEAEC; color: var(--outcome-reckless); border: 1px solid #E8A0AA; display: block; }
-    .lookup-status.loading { background: #EBF3FA; color: var(--accent); border: 1px solid var(--border); display: block; }
+    .lookup-status.loading { background: #F2F2F2; color: var(--accent); border: 1px solid var(--border); display: block; }
 
     .stop-screen { display: none; }
     .stop-screen.active { display: block; }
