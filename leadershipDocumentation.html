@@ -521,10 +521,8 @@
 
       <div class="field-group">
         <label>Is HR being notified for this event? <span class="required">*</span></label>
-        <div class="yn-group">
-          <button type="button" class="yn-btn" id="hr-yes" onclick="setHR(true)">Yes — Notify HR</button>
-          <button type="button" class="yn-btn" id="hr-no"  onclick="setHR(false)">No — Leader Managed</button>
-        </div>
+        <div id="hr-decision" style="padding:14px 18px; border-radius:10px; font-size:0.95rem; font-weight:600; display:inline-block;"></div>
+        <div style="font-size:0.78rem; color:#888888; margin-top:8px; font-style:italic;">Auto-selected based on Attachment A outcome.</div>
         <div class="field-error" id="err_hr">Please indicate whether HR is being notified.</div>
       </div>
 
@@ -1005,15 +1003,25 @@ function resetFollowupOwner() {
 
   // ── HR escalation toggle ────────────────────────────────
   function setHR(yes) {
-    hrNotified = yes;
-    if (yes) {
+  hrNotified = yes;
+  if (yes) {
     document.getElementById('inp_hr_date').value = new Date().toISOString().split('T')[0];
   }
-    document.getElementById('hr-yes').className = yes ? 'yn-btn selected-yes' : 'yn-btn';
-    document.getElementById('hr-no').className  = yes ? 'yn-btn' : 'yn-btn selected-no';
-    document.getElementById('hr-fields').className = yes ? 'hr-fields visible' : 'hr-fields';
-    document.getElementById('err_hr').classList.remove('visible');
+  const badge = document.getElementById('hr-decision');
+  if (yes) {
+    badge.textContent = '⚠️ Yes — HR Notified';
+    badge.style.background = '#FBEAEC';
+    badge.style.color = '#9B2335';
+    badge.style.border = '2px solid #9B2335';
+  } else {
+    badge.textContent = '✅ No — Leader Managed';
+    badge.style.background = '#E8F5EF';
+    badge.style.color = '#2E7D5B';
+    badge.style.border = '2px solid #2E7D5B';
   }
+  document.getElementById('hr-fields').className = yes ? 'hr-fields visible' : 'hr-fields';
+  document.getElementById('err_hr').classList.remove('visible');
+}
 
   // ── Final submit ────────────────────────────────────────
   function submitForm() {
