@@ -855,6 +855,7 @@ function onFollowupOwnerInput() {
 }
 
 async function lookupFollowupOwner(empId) {
+  const WORKER_URL = 'https://just-culture.quinteroalberto88.workers.dev';
   console.log('lookupFollowupOwner called with:', empId);
   const status = document.getElementById('followup-owner-status');
   status.className = 'lookup-status loading';
