@@ -975,6 +975,7 @@
 
   // ── Init ────────────────────────────────────────────────
   updateProgress(1);
+  document.getElementById('inp_date_of_event').value = new Date().toISOString().split('T')[0];
 
   // Load all incidents on step 2 when it becomes active
   const origGoToStep = goToStep;
