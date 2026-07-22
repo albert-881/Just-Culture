@@ -484,9 +484,14 @@
           <div class="field-error" id="err_followup_date">Please select a follow-up date.</div>
         </div>
         <div class="field-group">
-          <label for="inp_followup_owner">Follow-Up Owner <span class="required">*</span></label>
-          <input type="text" id="inp_followup_owner" placeholder="Name / role responsible">
-          <div class="field-error" id="err_followup_owner">Please enter a follow-up owner.</div>
+          <label for="inp_followup_owner_id">Follow-Up Owner ID <span class="required">*</span></label>
+          <input type="text" id="inp_followup_owner_id" placeholder="Enter Employee ID" oninput="onFollowupOwnerInput()">
+          <div class="lookup-status" id="followup-owner-status"></div>
+          <div class="field-error" id="err_followup_owner">Please enter a valid Follow-Up Owner ID.</div>
+        </div>
+        <div class="field-group">
+          <label>Follow-Up Owner Name</label>
+          <input type="text" id="inp_followup_owner" placeholder="Auto-filled from ID" readonly class="autofilled">
         </div>
       </div>
 
@@ -670,7 +675,7 @@
       require('inp_employee_action', 'err_employee_action');
       require('inp_system_action',   'err_system_action');
       require('inp_followup_date',   'err_followup_date');
-      require('inp_followup_owner',  'err_followup_owner');
+      if (!followupOwnerDone) { document.getElementById('err_followup_owner').classList.add('visible'); valid = false; }
     }
 
     if (step === 6) {
@@ -838,6 +843,49 @@
       employeeLookupDone = false;
     }
   }
+
+  let followupOwnerTimer = null;
+let followupOwnerDone  = false;
+
+function onFollowupOwnerInput() {
+  clearTimeout(followupOwnerTimer);
+  const val = document.getElementById('inp_followup_owner_id').value.trim();
+  if (!val) { resetFollowupOwner(); return; }
+  followupOwnerTimer = setTimeout(() => lookupFollowupOwner(val), 600);
+}
+
+async function lookupFollowupOwner(empId) {
+  const status = document.getElementById('followup-owner-status');
+  status.className = 'lookup-status loading';
+  status.textContent = 'Looking up employee...';
+  try {
+    const url = `${WORKER_URL}?table=${ROSTER_TABLE}&filter=[EMPLOYEE ID] = ${encodeURIComponent(empId)}&field=FIRST NAME&field=LAST NAME`;
+    const data = await (await fetch(url)).json();
+    if (data && Array.isArray(data) && data.length > 0) {
+      const fullName = `${data[0]['FIRST NAME'] || ''} ${data[0]['LAST NAME'] || ''}`.trim();
+      document.getElementById('inp_followup_owner').value = fullName;
+      status.className = 'lookup-status success';
+      status.textContent = `✅ Found: ${fullName}`;
+      followupOwnerDone = true;
+      document.getElementById('err_followup_owner').classList.remove('visible');
+    } else {
+      resetFollowupOwner();
+      status.className = 'lookup-status error';
+      status.textContent = '❌ No employee found with that ID.';
+    }
+  } catch (e) {
+    status.className = 'lookup-status error';
+    status.textContent = '❌ Could not connect. Please try again.';
+  }
+}
+
+function resetFollowupOwner() {
+  document.getElementById('inp_followup_owner').value = '';
+  const status = document.getElementById('followup-owner-status');
+  status.className = 'lookup-status';
+  status.textContent = '';
+  followupOwnerDone = false;
+}
 
   function resetEmployeeFields() {
     ['inp_employee_name','inp_job_title','inp_department'].forEach(id => {
