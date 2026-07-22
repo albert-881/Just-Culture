@@ -999,6 +999,8 @@ function resetFollowupOwner() {
     const outcomeText = (rec['Outcome'] || '').toLowerCase();
     const requiresHR = outcomeText.includes('reckless');
     setHR(requiresHR);
+    document.getElementById('hr-yes').style.display = requiresHR ? '' : 'none';
+    document.getElementById('hr-no').style.display  = requiresHR ? 'none' : '';
   }
 
   // ── HR escalation toggle ────────────────────────────────
