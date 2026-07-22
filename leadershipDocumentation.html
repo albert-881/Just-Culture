@@ -608,8 +608,17 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Auto-load incidents when step 2 becomes active
-    if (n === 2) fetchIncidents('');
-
+    if (n === 2) {
+  fetchIncidents('').then(() => {
+    if (selectedIncident) {
+      document.querySelectorAll('.incident-option').forEach(opt => {
+        if (opt.dataset.id && opt.dataset.id === String(selectedIncident['Id'])) {
+          opt.classList.add('selected');
+        }
+      });
+    }
+  });
+}
     // Set today's date on signature step
     if (n === 7) {
       const today = new Date().toLocaleDateString('en-US');
@@ -951,6 +960,7 @@ function resetFollowupOwner() {
           <div class="inc-outcome">📋 ${rec['Outcome'] || 'No outcome recorded'}</div>
           <div class="inc-meta">Leader: ${rec['NameOfLeader'] || '—'} &nbsp;|&nbsp; Date: ${rec['Date'] ? rec['Date'].split('T')[0] : '—'}</div>
         `;
+        div.dataset.id = String(rec['Id']);
         div.onclick = () => selectIncident(div, rec);
         container.appendChild(div);
       });
