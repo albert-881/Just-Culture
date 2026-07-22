@@ -418,28 +418,28 @@
 
       <div class="outcome-list">
         <label class="outcome-item system" id="oc-system">
-          <input type="checkbox" id="chk_system">
+          <input type="checkbox" id="chk_system" disabled>
           <div class="outcome-item-text">
             <strong>System Flaw</strong>
             <span>Correct the system. May apply alone, or together with an employee bucket below (shared accountability).</span>
           </div>
         </label>
         <label class="outcome-item human" id="oc-human">
-          <input type="checkbox" id="chk_human">
+          <input type="checkbox" id="chk_human" disabled>
           <div class="outcome-item-text">
             <strong>Human Error</strong>
             <span>Console / coach the employee.</span>
           </div>
         </label>
         <label class="outcome-item atrisk" id="oc-atrisk">
-          <input type="checkbox" id="chk_atrisk">
+          <input type="checkbox" id="chk_atrisk" disabled>
           <div class="outcome-item-text">
             <strong>At-Risk Behavior</strong>
             <span>Coach / re-train the employee.</span>
           </div>
         </label>
         <label class="outcome-item reckless" id="oc-reckless">
-          <input type="checkbox" id="chk_reckless">
+          <input type="checkbox" id="chk_reckless" disabled>
           <div class="outcome-item-text">
             <strong>Reckless Behavior</strong>
             <span>Discipline; notify HR.</span>
@@ -916,6 +916,12 @@
     document.getElementById('chk_human').checked   = outcome.includes('human error');
     document.getElementById('chk_atrisk').checked  = outcome.includes('at-risk');
     document.getElementById('chk_reckless').checked= outcome.includes('reckless');
+
+    // Show only checked outcomes
+    ['system','human','atrisk','reckless'].forEach(type => {
+      const checked = document.getElementById(`chk_${type}`).checked;
+      document.getElementById(`oc-${type}`).style.display = checked ? '' : 'none';
+    });
 
     // Store the record ID as the link
     document.getElementById('h_jcform_link').value = rec['Id'];
