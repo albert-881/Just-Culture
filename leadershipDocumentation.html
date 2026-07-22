@@ -609,16 +609,21 @@
 
     // Auto-load incidents when step 2 becomes active
     if (n === 2) {
-  fetchIncidents('').then(() => {
-    if (selectedIncident) {
-      document.querySelectorAll('.incident-option').forEach(opt => {
-        if (opt.dataset.id && opt.dataset.id === String(selectedIncident['Id'])) {
-          opt.classList.add('selected');
+      fetchIncidents('').then(() => {
+        if (selectedIncident) {
+          document.querySelectorAll('.incident-option').forEach(opt => {
+            if (opt.dataset.id && opt.dataset.id === String(selectedIncident['Id'])) {
+              opt.classList.add('selected');
+            }
+          });
         }
       });
     }
-  });
-}
+    if (n === 5) {
+      if (!document.getElementById('inp_followup_date').value) {
+        document.getElementById('inp_followup_date').value = new Date().toISOString().split('T')[0];
+      }
+    }
     // Set today's date on signature step
     if (n === 7) {
       const today = new Date().toLocaleDateString('en-US');
