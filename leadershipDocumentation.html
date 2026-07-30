@@ -987,8 +987,11 @@ function resetFollowupOwner() {
 
     // Show only checked outcomes
     ['system','human','atrisk','reckless'].forEach(type => {
-      const checked = document.getElementById(`chk_${type}`).checked;
-      document.getElementById(`oc-${type}`).style.display = checked ? '' : 'none';
+      const chk = document.getElementById(`chk_${type}`);
+      const oc  = document.getElementById(`oc-${type}`);
+      if (chk && oc) {
+        oc.style.display = chk.checked ? '' : 'none';
+      }
     });
 
     // Store the record ID as the link
