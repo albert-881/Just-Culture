@@ -39,8 +39,17 @@
     .form-header {
       text-align: center;
       max-width: 620px;
+      width: 100%; 
       margin-bottom: 40px;
+      
     }
+    .form-header img {      /* ADD this whole rule */
+  display: block;
+  height: 56px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto 20px;
+}
     .form-header h1 {
       font-family: 'DM Serif Display', serif;
       font-size: 2.4rem;
@@ -276,6 +285,7 @@
     .hidden-fields { display: none; }
 
     @media (max-width: 480px) {
+      .form-header img { height: 38px; }
       .card { padding: 28px 22px; }
       .form-header h1 { font-size: 1.9rem; }
       .answer-group { flex-direction: column; }
@@ -286,7 +296,7 @@
 
   <div class="form-header">
     
-    <img src="HMC_logo_transparent.png" alt="Harlingen Medical Center" style="height:60px; margin-bottom:20px;">
+    <img src="HMC_logo_transparent.png" alt="Harlingen Medical Center">
     <h1>Just Culture Algorithm</h1>
     <p>Answer each question honestly. You will be guided through based on your responses. Only one question is shown at a time.</p>
   </div>
