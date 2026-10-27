@@ -12,11 +12,10 @@
     :root {
       --navy:    #8E0C3A;
       --accent:  #8E0C3A;
+      --deep:    #5E0726;
       --soft-bg: #F5F5F5;
       --white:   #FFFFFF;
-      --border:  #C8C8C8;
-      --line:    #E6E6E6;
-      --text:    #000000;
+      --border:  #D9D9D9;
       --muted:   #6F6F6F;
       --tint:    #F9EEF2;
     }
@@ -24,7 +23,6 @@
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--soft-bg);
-      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -32,100 +30,83 @@
       padding: 32px 16px 48px;
     }
 
-    /* Header */
     .hub-header {
       width: 100%;
-      max-width: 560px;
+      max-width: 720px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 14px;
+      margin-bottom: 28px;
+      text-align: center;
     }
-    .hub-header img { height: 36px; max-width: 60%; }
+    .hub-header img { height: 44px; max-width: 100%; }
     .hub-header h1 {
       font-family: 'DM Serif Display', Georgia, serif;
       font-weight: 400;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       color: var(--navy);
-      white-space: nowrap;
     }
 
-    /* Program list */
     .hub {
       width: 100%;
-      max-width: 560px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-top: 3px solid var(--accent);
-      border-radius: 10px;
-      overflow: hidden;
+      max-width: 720px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
     }
-    .program + .program { border-top: 1px solid var(--line); }
+    .hub > * { flex: 0 1 240px; }
 
-    .program-toggle {
-      width: 100%;
+    /* Program button */
+    .program-btn {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      padding: 14px 18px;
-      background: none;
-      border: none;
-      font-family: inherit;
-      text-align: left;
-      cursor: pointer;
-      color: var(--navy);
-    }
-    .program-toggle:hover { background: var(--tint); }
-    .program-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
-    .program-name { flex: 1; font-size: 0.95rem; font-weight: 600; }
-    .program-count { font-size: 0.78rem; color: var(--muted); }
-    .caret { display: flex; color: var(--accent); transition: transform 0.2s; }
-    .program.open .caret { transform: rotate(90deg); }
-
-    /* Sub-links (collapsible) */
-    .sublinks {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.2s ease;
-    }
-    .program.open .sublinks { grid-template-rows: 1fr; }
-    .sublinks-inner { overflow: hidden; }
-    .sublinks ul { list-style: none; padding: 2px 0 8px; background: #FCFCFC; border-top: 1px solid var(--line); }
-
-    .sublink {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 18px 9px 44px;
-      text-decoration: none;
-      color: var(--text);
-      font-size: 0.88rem;
-    }
-    a.sublink:hover { background: var(--tint); color: var(--navy); }
-    a.sublink:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
-    .sub-code {
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: var(--accent);
+      padding: 16px 18px 16px 24px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--deep) 100%);
       color: var(--white);
-      font-size: 0.7rem;
+      font-size: 1rem;
       font-weight: 600;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset, 0 4px 12px rgba(94, 7, 38, 0.22);
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+    a.program-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset, 0 10px 22px rgba(94, 7, 38, 0.3);
+    }
+    a.program-btn:active { transform: translateY(0); }
+    a.program-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+    .btn-icon {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.16);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
+      transition: background 0.18s, transform 0.18s;
     }
-    .sub-title { flex: 1; }
-    .sublink.soon { color: var(--muted); cursor: default; }
-    .sublink.soon .sub-code { background: var(--border); }
-    .soon-tag { font-size: 0.72rem; color: var(--muted); }
+    a.program-btn:hover .btn-icon { background: rgba(255,255,255,0.28); transform: translateX(3px); }
 
-    .hub-footer { margin-top: 20px; font-size: 0.75rem; color: var(--muted); }
-
-    @media (max-width: 480px) {
-      .hub-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    /* Coming soon */
+    .program-btn.soon {
+      background: var(--white);
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      box-shadow: none;
+      cursor: default;
     }
+    .soon-tag { font-size: 0.72rem; font-weight: 500; }
+
+    .hub-footer { margin-top: 32px; font-size: 0.75rem; color: var(--muted); }
+
     @media (prefers-reduced-motion: reduce) {
       * { transition: none !important; }
+      a.program-btn:hover, a.program-btn:hover .btn-icon { transform: none; }
     }
   </style>
 </head>
@@ -142,73 +123,29 @@
 
   <script>
     // ─────────────────────────────────────────────────────────────
-    //  FORMS CONFIG — each group is a program; its forms show as
-    //  sub-links when the program is clicked.
+    //  PROGRAMS CONFIG — one button per program.
+    //  To add a program, add one line below.
     //
-    //  code    short badge text (e.g. "A", "B")
-    //  title   form name shown to users
-    //  href    page to open
+    //  name    button text
+    //  href    page the button opens
     //  status  optional: "soon" shows it greyed out, not clickable
     // ─────────────────────────────────────────────────────────────
-    const FORM_GROUPS = [
-      {
-        name: 'Just Culture',
-        forms: [
-          { code: 'A', title: 'Just Culture Algorithm',   href: 'justCultureAlgorithm.html' },
-          { code: 'B', title: 'Leadership Documentation', href: 'leadershipDocumentation.html' }
-        ]
-      }
-      // Example of a future program:
-      // {
-      //   name: 'Another Program',
-      //   forms: [
-      //     { code: 'A', title: 'New Form', href: 'newForm.html', status: 'soon' }
-      //   ]
-      // }
+    const PROGRAMS = [
+      { name: 'Just Culture', href: 'justCultureAlgorithm.html' }
+      // { name: 'Another Program', href: 'anotherProgram.html', status: 'soon' }
     ];
 
     // ── Render ───────────────────────────────────────────────────
-    const caret = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
-
     function esc(s) {
       return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
     }
+    const chevron = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
-    function renderForm(f) {
-      const inner = `<span class="sub-code" aria-hidden="true">${esc(f.code)}</span>
-                     <span class="sub-title">${esc(f.title)}</span>`;
-      return f.status === 'soon'
-        ? `<li><div class="sublink soon" aria-disabled="true">${inner}<span class="soon-tag">Coming soon</span></div></li>`
-        : `<li><a class="sublink" href="${esc(f.href)}">${inner}</a></li>`;
-    }
-
-    const hub = document.getElementById('hub');
-    hub.innerHTML = FORM_GROUPS.map((g, i) => `
-      <section class="program">
-        <button type="button" class="program-toggle" aria-expanded="false" aria-controls="prog-${i}">
-          <span class="caret">${caret}</span>
-          <span class="program-name">${esc(g.name)}</span>
-          <span class="program-count">${g.forms.length} form${g.forms.length === 1 ? '' : 's'}</span>
-        </button>
-        <div class="sublinks" id="prog-${i}">
-          <div class="sublinks-inner">
-            <ul>${g.forms.map(renderForm).join('')}</ul>
-          </div>
-        </div>
-      </section>`).join('');
-
-    // Toggle open/closed on click (sub-links stay hidden from keyboard while closed)
-    hub.querySelectorAll('.program').forEach(p => {
-      const btn = p.querySelector('.program-toggle');
-      const links = p.querySelectorAll('a.sublink');
-      const setOpen = open => {
-        p.classList.toggle('open', open);
-        btn.setAttribute('aria-expanded', open);
-        links.forEach(a => a.tabIndex = open ? 0 : -1);
-      };
-      setOpen(false);
-      btn.addEventListener('click', () => setOpen(!p.classList.contains('open')));
-    });
+    document.getElementById('hub').innerHTML = PROGRAMS.map(p =>
+      p.status === 'soon'
+        ? `<div class="program-btn soon" aria-disabled="true">${esc(p.name)}<span class="soon-tag">Coming soon</span></div>`
+        : `<a class="program-btn" href="${esc(p.href)}">${esc(p.name)}<span class="btn-icon">${chevron}</span></a>`
+    ).join('');
   </script>
 
 </body>
