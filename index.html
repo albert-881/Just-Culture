@@ -11,11 +11,11 @@
 
     :root {
       --navy:    #8E0C3A;
-      --steel:   #000000;
       --accent:  #8E0C3A;
       --soft-bg: #F5F5F5;
       --white:   #FFFFFF;
       --border:  #C8C8C8;
+      --line:    #E6E6E6;
       --text:    #000000;
       --muted:   #6F6F6F;
       --tint:    #F9EEF2;
@@ -29,102 +29,100 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 48px 16px 80px;
+      padding: 32px 16px 48px;
     }
 
+    /* Header */
     .hub-header {
       width: 100%;
-      max-width: 720px;
-      margin-bottom: 36px;
-      text-align: center;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
     }
-    .hub-header img { height: 60px; margin-bottom: 24px; max-width: 100%; }
+    .hub-header img { height: 36px; max-width: 60%; }
     .hub-header h1 {
       font-family: 'DM Serif Display', Georgia, serif;
       font-weight: 400;
-      font-size: 2.5rem;
-      line-height: 1.1;
+      font-size: 1.4rem;
       color: var(--navy);
-      margin-bottom: 12px;
-    }
-    .hub-header p {
-      font-size: 0.98rem;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 460px;
-      margin: 0 auto;
-    }
-
-    .hub { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 28px; }
-
-    .group {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    .group-head {
-      padding: 22px 28px 18px;
-      border-bottom: 1px solid var(--border);
-      border-top: 4px solid var(--accent);
-    }
-    .group-head h2 {
-      font-family: 'DM Serif Display', Georgia, serif;
-      font-weight: 400;
-      font-size: 1.35rem;
-      color: var(--navy);
-    }
-    .group-head p { font-size: 0.86rem; color: var(--muted); margin-top: 4px; line-height: 1.55; }
-
-    .form-list { list-style: none; }
-    .form-list li + li { border-top: 1px solid #E6E6E6; }
-
-    .form-link {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 18px;
-      padding: 20px 28px;
-      text-decoration: none;
-      color: inherit;
-      transition: background 0.15s;
-    }
-    a.form-link:hover { background: var(--tint); }
-    a.form-link:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
-
-    .form-code {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: var(--white);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-    .form-title { font-size: 1rem; font-weight: 600; color: var(--navy); }
-    .form-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.55; margin-top: 3px; }
-    .form-go { color: var(--accent); display: flex; transition: transform 0.15s; }
-    a.form-link:hover .form-go { transform: translateX(3px); }
-
-    .form-link.soon { cursor: default; }
-    .form-link.soon .form-code { background: var(--border); }
-    .form-link.soon .form-title { color: var(--muted); }
-    .soon-tag {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      padding: 4px 10px;
       white-space: nowrap;
     }
 
-    .hub-footer { margin-top: 36px; font-size: 0.78rem; color: var(--muted); text-align: center; }
+    /* Program list */
+    .hub {
+      width: 100%;
+      max-width: 560px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .program + .program { border-top: 1px solid var(--line); }
 
-    @media (max-width: 520px) {
-      .hub-header h1 { font-size: 2rem; }
-      .group-head, .form-link { padding-left: 20px; padding-right: 20px; }
-      .form-link { gap: 14px; }
+    .program-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+      color: var(--navy);
+    }
+    .program-toggle:hover { background: var(--tint); }
+    .program-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+    .program-name { flex: 1; font-size: 0.95rem; font-weight: 600; }
+    .program-count { font-size: 0.78rem; color: var(--muted); }
+    .caret { display: flex; color: var(--accent); transition: transform 0.2s; }
+    .program.open .caret { transform: rotate(90deg); }
+
+    /* Sub-links (collapsible) */
+    .sublinks {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.2s ease;
+    }
+    .program.open .sublinks { grid-template-rows: 1fr; }
+    .sublinks-inner { overflow: hidden; }
+    .sublinks ul { list-style: none; padding: 2px 0 8px; background: #FCFCFC; border-top: 1px solid var(--line); }
+
+    .sublink {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 18px 9px 44px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+    a.sublink:hover { background: var(--tint); color: var(--navy); }
+    a.sublink:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+    .sub-code {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sub-title { flex: 1; }
+    .sublink.soon { color: var(--muted); cursor: default; }
+    .sublink.soon .sub-code { background: var(--border); }
+    .soon-tag { font-size: 0.72rem; color: var(--muted); }
+
+    .hub-footer { margin-top: 20px; font-size: 0.75rem; color: var(--muted); }
+
+    @media (max-width: 480px) {
+      .hub-header { flex-direction: column; align-items: flex-start; gap: 10px; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { transition: none !important; }
@@ -136,7 +134,6 @@
   <header class="hub-header">
     <img src="HMC_logo_transparent.png" alt="Harlingen Medical Center">
     <h1>HMC Forms</h1>
-    <p>Choose a form to get started. Forms are grouped by program.</p>
   </header>
 
   <main class="hub" id="hub"></main>
@@ -145,73 +142,73 @@
 
   <script>
     // ─────────────────────────────────────────────────────────────
-    //  FORMS CONFIG — to add a form, add an entry to a group's
-    //  "forms" list (or add a new group). Nothing else needs to change.
+    //  FORMS CONFIG — each group is a program; its forms show as
+    //  sub-links when the program is clicked.
     //
-    //  code        short badge text (e.g. "A", "B", "C")
-    //  title       form name shown to users
-    //  description one line on what the form is for
-    //  href        page to open
-    //  status      optional: "soon" shows it greyed out, not clickable
+    //  code    short badge text (e.g. "A", "B")
+    //  title   form name shown to users
+    //  href    page to open
+    //  status  optional: "soon" shows it greyed out, not clickable
     // ─────────────────────────────────────────────────────────────
     const FORM_GROUPS = [
       {
         name: 'Just Culture',
-        description: 'Event review. Complete Attachment A first, then Attachment B for the same event.',
         forms: [
-          {
-            code: 'A',
-            title: 'Just Culture Algorithm',
-            description: 'Answer guided questions to determine the outcome of an event.',
-            href: 'justCultureAlgorithm.html'
-          },
-          {
-            code: 'B',
-            title: 'Leadership Documentation',
-            description: 'Document the action plan, HR escalation, and signatures, linked to Attachment A.',
-            href: 'leadershipDocumentation.html'
-          }
+          { code: 'A', title: 'Just Culture Algorithm',   href: 'justCultureAlgorithm.html' },
+          { code: 'B', title: 'Leadership Documentation', href: 'leadershipDocumentation.html' }
         ]
       }
-      // Example of a future group:
+      // Example of a future program:
       // {
       //   name: 'Another Program',
-      //   description: '',
       //   forms: [
-      //     { code: 'C', title: 'New Form', description: 'What it is for.', href: 'newForm.html', status: 'soon' }
+      //     { code: 'A', title: 'New Form', href: 'newForm.html', status: 'soon' }
       //   ]
       // }
     ];
 
     // ── Render ───────────────────────────────────────────────────
-    const chevron = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+    const caret = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
     function esc(s) {
       return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
     }
 
     function renderForm(f) {
-      const soon = f.status === 'soon';
-      const inner = `
-        <div class="form-code" aria-hidden="true">${esc(f.code)}</div>
-        <div>
-          <div class="form-title">${esc(f.title)}</div>
-          ${f.description ? `<div class="form-desc">${esc(f.description)}</div>` : ''}
-        </div>
-        ${soon ? '<span class="soon-tag">Coming soon</span>' : `<span class="form-go">${chevron}</span>`}`;
-      return soon
-        ? `<li><div class="form-link soon" aria-disabled="true">${inner}</div></li>`
-        : `<li><a class="form-link" href="${esc(f.href)}">${inner}</a></li>`;
+      const inner = `<span class="sub-code" aria-hidden="true">${esc(f.code)}</span>
+                     <span class="sub-title">${esc(f.title)}</span>`;
+      return f.status === 'soon'
+        ? `<li><div class="sublink soon" aria-disabled="true">${inner}<span class="soon-tag">Coming soon</span></div></li>`
+        : `<li><a class="sublink" href="${esc(f.href)}">${inner}</a></li>`;
     }
 
-    document.getElementById('hub').innerHTML = FORM_GROUPS.map(g => `
-      <section class="group">
-        <div class="group-head">
-          <h2>${esc(g.name)}</h2>
-          ${g.description ? `<p>${esc(g.description)}</p>` : ''}
+    const hub = document.getElementById('hub');
+    hub.innerHTML = FORM_GROUPS.map((g, i) => `
+      <section class="program">
+        <button type="button" class="program-toggle" aria-expanded="false" aria-controls="prog-${i}">
+          <span class="caret">${caret}</span>
+          <span class="program-name">${esc(g.name)}</span>
+          <span class="program-count">${g.forms.length} form${g.forms.length === 1 ? '' : 's'}</span>
+        </button>
+        <div class="sublinks" id="prog-${i}">
+          <div class="sublinks-inner">
+            <ul>${g.forms.map(renderForm).join('')}</ul>
+          </div>
         </div>
-        <ul class="form-list">${g.forms.map(renderForm).join('')}</ul>
       </section>`).join('');
+
+    // Toggle open/closed on click (sub-links stay hidden from keyboard while closed)
+    hub.querySelectorAll('.program').forEach(p => {
+      const btn = p.querySelector('.program-toggle');
+      const links = p.querySelectorAll('a.sublink');
+      const setOpen = open => {
+        p.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open);
+        links.forEach(a => a.tabIndex = open ? 0 : -1);
+      };
+      setOpen(false);
+      btn.addEventListener('click', () => setOpen(!p.classList.contains('open')));
+    });
   </script>
 
 </body>
