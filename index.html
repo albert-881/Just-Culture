@@ -27,7 +27,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 32px 16px 48px;
+      padding: 32px 16px 20px;
     }
 
     .hub-header {
@@ -52,8 +52,10 @@
       width: 100%;
       max-width: 720px;
       display: flex;
+      flex: 1;
       flex-wrap: wrap;
       justify-content: center;
+      align-content: center;
       gap: 16px;
     }
     .hub > * { flex: 0 1 240px; }
@@ -102,7 +104,7 @@
     }
     .soon-tag { font-size: 0.72rem; font-weight: 500; }
 
-    .hub-footer { margin-top: 32px; font-size: 0.75rem; color: var(--muted); }
+    .hub-footer { margin-top: 24px; font-size: 0.75rem; color: var(--muted); }
 
     @media (prefers-reduced-motion: reduce) {
       * { transition: none !important; }
